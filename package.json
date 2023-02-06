@@ -10,9 +10,12 @@
   "author": "dekard02",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.9.0"
+    "mongoose": "^6.9.0",
+    "mongoose-unique-validator": "^3.1.0",
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
     "eslint": "^8.33.0",
