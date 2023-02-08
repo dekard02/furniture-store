@@ -13,9 +13,7 @@ exports.getAllCategories = asyncHandler(async (req, res, next) => {
 exports.getCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
 
-  if (!category) {
-    return next(new AppError('Không tồn tại dữ liệu với id này', 404));
-  }
+  if (!category) throw new AppError('Không tồn tại dữ liệu với id này', 404);
 
   return res.status(200).json({
     status: 'success',
@@ -32,7 +30,13 @@ exports.createCategory = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateCategory = asyncHandler(async (req, res, next) => {
-  const category = await Category.findByIdAndUpdate(req.params.id, req.body);
+  const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!category) throw new AppError('Không tồn tại dữ liệu với id này', 404);
+
   return res.status(200).json({
     status: 'success',
     category,
@@ -40,7 +44,10 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
 });
 
 exports.deleteCategory = asyncHandler(async (req, res, next) => {
-  await Category.findByIdAndDelete(req.params.id);
+  const category = await Category.findByIdAndDelete(req.params.id);
+
+  if (!category) throw new AppError('Không tồn tại dữ liệu với id này', 404);
+
   return res.status(204).json({
     status: 'success',
     category: null,

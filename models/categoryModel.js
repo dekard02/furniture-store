@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const AppError = require('../errors/AppError');
 
 // TODO: validate
 const categorySchema = new mongoose.Schema(
@@ -33,12 +34,30 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
-categorySchema.path('name').validate(async (value) => {
-  const nameCount = await mongoose.models.Category.countDocuments({
-    name: value,
-  });
-  return !nameCount;
+categorySchema.path('name').validate(async function (value) {
+  if (this.isNew) {
+    const nameCount = await mongoose.models.Category.countDocuments({
+      name: value,
+    });
+    return !nameCount;
+  }
+
+  return true;
 }, 'Tên loại sản phẩm này đã tồn tại');
+
+categorySchema.pre(/(u|U)pdate/, async function (next) {
+  const { _id } = this.getQuery();
+  const updatedName = this.get('name');
+  const nameCount = await mongoose.models.Category.countDocuments({
+    name: updatedName,
+    _id: {
+      $ne: _id,
+    },
+  });
+
+  if (!nameCount) next();
+  else throw new AppError('Tên loại sản phẩm này đã tồn tại', 400);
+});
 
 categorySchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
