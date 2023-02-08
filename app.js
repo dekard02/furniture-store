@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const AppError = require('./errors/AppError');
+const globalErrorHandler = require('./middlewares/error');
 
 const categoryRouter = require('./routes/categoryRoutes');
 
@@ -13,6 +15,12 @@ app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
 app.use('/api/v1/categories', categoryRouter);
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorHandler);
 
 mongoose.set('strictQuery', true);
 const DB = process.env.DATABASE;
