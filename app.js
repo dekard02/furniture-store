@@ -6,6 +6,7 @@ const AppError = require('./errors/AppError');
 const globalErrorHandler = require('./middlewares/error');
 
 const categoryRouter = require('./routes/categoryRoutes');
+const productRouter = require('./routes/productRoutes');
 
 dotenv.config({ path: './.env' });
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
 app.use('/api/v1/categories', categoryRouter);
+app.use('/api/v1/products', productRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
