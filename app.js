@@ -7,6 +7,7 @@ const globalErrorHandler = require('./middlewares/error');
 
 const categoryRouter = require('./routes/categoryRoutes');
 const productRouter = require('./routes/productRoutes');
+const authRouter = require('./routes/authRoutes');
 
 dotenv.config({ path: './.env' });
 const app = express();
@@ -15,6 +16,7 @@ app.use('/public', express.static('./public'));
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
+app.use('/api/v1/', authRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/products', productRouter);
 
