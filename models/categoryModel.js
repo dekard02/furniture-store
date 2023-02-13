@@ -34,6 +34,9 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
+categorySchema.index({ slug: 1 });
+categorySchema.index({ '$**': 'text' });
+
 categorySchema.path('name').validate(async function (value) {
   if (this.isNew) {
     const nameCount = await mongoose.models.Category.countDocuments({

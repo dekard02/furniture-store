@@ -1,11 +1,21 @@
 const Category = require('../models/categoryModel');
 const asyncHandler = require('../errors/asyncHandler');
 const AppError = require('../errors/AppError');
+const APIFeatures = require('../utils/APIFeature');
 
 exports.getAllCategories = asyncHandler(async (req, res, next) => {
-  const categories = await Category.find();
+  const features = await new APIFeatures(Category.find(), req.query)
+    .search()
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const categories = await features.mongooseQuery;
+
   return res.status(200).json({
     status: 'success',
+    page: features.page,
     categories,
   });
 });

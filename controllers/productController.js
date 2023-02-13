@@ -1,17 +1,30 @@
 const multer = require('multer');
 const asyncHandler = require('../errors/asyncHandler');
 const saveImage = require('../utils/saveImage');
+const { omitFields } = require('../utils/objectUtils');
 const Product = require('../models/productModel');
 const AppError = require('../errors/AppError');
+const APIFeatures = require('../utils/APIFeature');
 
 exports.uploadProductImages = multer({
   storage: multer.memoryStorage(),
 }).any();
 
+// TODO: add review to get one product
+
 exports.getAllProduct = asyncHandler(async (req, res, next) => {
-  const products = await Product.find();
+  const features = await new APIFeatures(Product.find(), req.query)
+    .search()
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const products = await features.mongooseQuery;
+
   return res.status(200).json({
     status: 'success',
+    page: features.page,
     products,
   });
 });
@@ -80,10 +93,14 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
     await saveProductImages(req.files, req.params.id);
   }
 
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-    runValidators: true,
-    new: true,
-  });
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    omitFields(req.body, 'images'),
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
 
   return res.status(200).json({
     status: 'success',

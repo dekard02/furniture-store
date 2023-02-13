@@ -34,6 +34,15 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    ratingsAverage: {
+      type: Number,
+      default: 4.0,
+      set: (val) => Math.round(val * 10) / 10,
+    },
+    ratingsQuantity: {
+      type: Number,
+      defautl: 0,
+    },
     categories: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Category',
@@ -67,6 +76,10 @@ const productSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+productSchema.index({ slug: 1 });
+productSchema.index({ price: 1 });
+productSchema.index({ '$**': 'text' });
 
 productSchema.path('name').validate(async function (value) {
   if (this.isNew) {
