@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['ADMIN', 'MANAGER', 'STAFF', 'CUSTOMER'],
+      enum: ['MANAGER', 'STAFF', 'CUSTOMER'],
       default: 'CUSTOMER',
     },
     active: {
@@ -60,18 +60,13 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.methods.addImageUrl = function (doc, req) {
-  if (!Array.isArray(doc)) {
-    const newDoc = Object.create(doc);
-    newDoc.image = `${getRootUrl(req)}/${doc.image}`;
-    return newDoc;
-  }
+userSchema.index({ email: 1 });
+userSchema.index({ '$**': 'text' });
 
-  return doc.map((el) => {
-    const newEl = Object.create(el);
-    newEl.image = `${getRootUrl(req)}/${el.image}`;
-    return newEl;
-  });
+userSchema.methods.addImageUrl = function (doc, req) {
+  const newDoc = Object.create(doc);
+  newDoc.image = `${getRootUrl(req)}/${doc.image}`;
+  return newDoc;
 };
 
 userSchema.pre('save', async function (next) {

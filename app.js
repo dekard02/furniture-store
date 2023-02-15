@@ -8,6 +8,8 @@ const globalErrorHandler = require('./middlewares/error');
 const categoryRouter = require('./routes/categoryRoutes');
 const productRouter = require('./routes/productRoutes');
 const authRouter = require('./routes/authRoutes');
+const userRouter = require('./routes/userRoutes');
+const orderRouter = require('./routes/orderRoutes');
 
 dotenv.config({ path: './.env' });
 const app = express();
@@ -19,6 +21,8 @@ app.use(cookieParser());
 app.use('/api/v1/', authRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/orders', orderRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
