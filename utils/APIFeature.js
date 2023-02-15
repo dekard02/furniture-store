@@ -6,8 +6,10 @@ class APIFeatures {
   }
 
   search() {
-    const q = this.requestQuery.q || '';
-    this.mongooseQuery.find({ $text: { $search: q } });
+    if (this.requestQuery.q) {
+      const { q } = this.requestQuery;
+      this.mongooseQuery.find({ $text: { $search: q } });
+    }
     return this;
   }
 
