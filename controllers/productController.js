@@ -6,6 +6,7 @@ const Product = require('../models/productModel');
 const AppError = require('../errors/AppError');
 const APIFeatures = require('../utils/APIFeature');
 
+// TODO change multer
 exports.uploadProductImages = multer({
   storage: multer.memoryStorage(),
 }).any();
@@ -22,10 +23,12 @@ exports.getAllProduct = asyncHandler(async (req, res, next) => {
 
   const products = await features.mongooseQuery;
 
+  // add image url
+
   return res.status(200).json({
     status: 'success',
     page: features.page,
-    products,
+    products: products.map((product) => product.addImagesUrl(product, req)),
   });
 });
 
@@ -61,8 +64,8 @@ const saveProductImages = async (files, productId) => {
   await Promise.all(
     files.map(async (file, index) => {
       const fileName = `product-${productId}-${Date.now()}-${index + 1}.png`;
-      const filePath = `./public/images/products/${fileName}`;
-      await saveImage(file.buffer, 700, null, filePath);
+      const filePath = `public/images/products/${fileName}`;
+      await saveImage(file.buffer, 700, null, `./${filePath}`);
       images.push(filePath);
     })
   );
