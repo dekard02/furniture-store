@@ -1,7 +1,7 @@
 const {
   sendErrorInDevelopment,
   sendErrorInProduction,
-} = require('../errors/sendErorr');
+} = require('../errors/sendError');
 
 const {
   handleCastErrorDB,
