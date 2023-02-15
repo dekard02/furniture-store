@@ -7,7 +7,7 @@ exports.filterObject = (obj, ...allowedFields) => {
 };
 
 exports.omitFields = (obj, ...excludedFields) => {
-  const newObj = Object.create(obj);
+  const newObj = { ...obj };
   excludedFields.forEach((field) => {
     delete newObj[field];
   });
