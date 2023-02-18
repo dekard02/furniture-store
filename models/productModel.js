@@ -26,10 +26,6 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Không được bỏ trống giá bán'],
       min: [0, 'Giá bán không được là số âm'],
     },
-    discount: {
-      type: Number,
-      default: 0,
-    },
     quantity: {
       type: Number,
       default: 0,
@@ -120,22 +116,51 @@ productSchema.pre(/^find/, function (next) {
   next();
 });
 
-productSchema.methods.addImagesUrl = function (doc, req) {
-  if (!Array.isArray(doc)) {
-    const newDoc = Object.create(doc);
-    for (let i = 0; i < doc.images.length; i++) {
-      newDoc.images[i] = `${getRootUrl(req)}/${doc.images[i]}`;
-    }
-    return newDoc;
-  }
+productSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'product',
+  localField: '_id',
+});
 
-  return doc.map((el) => {
-    const newEl = Object.create(el);
-    for (let i = 0; i < el.images.length; i++) {
-      newEl.images[i] = `${getRootUrl(req)}/${el.images[i]}`;
-    }
-    return newEl;
+productSchema.methods.addImagesUrl = function (doc, req) {
+  const newDoc = Object.create(doc);
+  for (let i = 0; i < doc.images.length; i++) {
+    newDoc.images[i] = `${getRootUrl(req)}/${doc.images[i]}`;
+  }
+  return newDoc;
+};
+
+productSchema.methods.didUserBuy = async function (productId, userId) {
+  const purchasedProduct = await mongoose.models.Order.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $unwind: {
+        path: '$products',
+      },
+    },
+    { $group: { _id: null, product: { $addToSet: '$products.product' } } },
+    { $unwind: '$product' },
+    {
+      $match: {
+        product: new mongoose.Types.ObjectId(productId),
+      },
+    },
+  ]);
+
+  return purchasedProduct.length !== 0;
+};
+
+productSchema.methods.didUserReview = async function (productId, userId) {
+  const review = mongoose.models.Review.findOne({
+    user: userId,
+    product: productId,
   });
+
+  return !review;
 };
 
 const Product = mongoose.model('Product', productSchema);
