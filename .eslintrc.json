@@ -10,6 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-param-reassign": "warn",
     "prefer-destructuring": "warn",
     "object-shorthand": "off",
     "no-plusplus": "off",
