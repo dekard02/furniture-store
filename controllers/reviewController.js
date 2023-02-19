@@ -27,7 +27,7 @@ exports.getAllReviews = asyncHandler(async (req, res, next) => {
 
 exports.getReview = asyncHandler(async (req, res, next) => {
   const { productId, id } = req.params;
-  const review = await Review.findOne({ product: productId }).findById(id);
+  const review = await Review.find({ product: productId }).findOne({ _id: id });
   if (!review) throw new AppError('Không tìm thấy review với id này', 404);
 
   return res.status(200).json({

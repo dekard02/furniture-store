@@ -1,6 +1,6 @@
+const rootUrl = process.env.ROOT_URL || '';
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const getRootUrl = require('../utils/getRootUrl');
 
 const userSchema = new mongoose.Schema(
   {
@@ -63,11 +63,19 @@ const userSchema = new mongoose.Schema(
 userSchema.index({ email: 1 });
 userSchema.index({ '$**': 'text' });
 
-userSchema.methods.addImageUrl = function (doc, req) {
-  const newDoc = Object.create(doc);
-  newDoc.image = `${getRootUrl(req)}/${doc.image}`;
-  return newDoc;
-};
+userSchema.pre(/^find/, function (next) {
+  this.projection({
+    fullName: 1,
+    email: 1,
+    image: { $concat: [rootUrl, '/', '$image'] },
+    passwordChangedAt: 1,
+    phoneNumber: 1,
+    address: 1,
+    role: 1,
+    active: 1,
+  });
+  next();
+});
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

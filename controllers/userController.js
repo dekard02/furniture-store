@@ -36,7 +36,7 @@ exports.me = asyncHandler(async (req, res, next) => {
   const profile = await User.findById(req.user.get('_id'));
   res.status(200).json({
     status: 'success',
-    profile: profile.addImageUrl(profile, req),
+    profile,
   });
 });
 
@@ -60,7 +60,7 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     status: 'success',
-    profile: user.addImageUrl(user, req),
+    profile: user,
   });
 });
 
@@ -77,12 +77,14 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     status: 'success',
     page: features.page,
-    users: users.addImageUrl(users, req),
+    users,
   });
 });
 
 exports.getUser = asyncHandler(async (req, res, next) => {
-  const user = User.findById(req.params.id);
+  const user = await User.findById(req.params.id);
+
+  if (!user) throw new AppError('Không tìm thấy người dùng với id này', 400);
 
   return res.status(200).json({
     status: 'success',
@@ -109,7 +111,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     status: 'success',
-    user: user.addImageUrl(user, req),
+    user,
   });
 });
 

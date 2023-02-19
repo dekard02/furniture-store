@@ -11,8 +11,6 @@ exports.uploadProductImages = multer({
   storage: multer.memoryStorage(),
 }).any();
 
-// TODO: add review to get one product
-
 exports.getAllProduct = asyncHandler(async (req, res, next) => {
   const features = await new APIFeatures(Product.find(), req.query)
     .search()
@@ -23,24 +21,21 @@ exports.getAllProduct = asyncHandler(async (req, res, next) => {
 
   const products = await features.mongooseQuery;
 
-  // add image url
-
   return res.status(200).json({
     status: 'success',
     page: features.page,
-    products: products.map((product) => product.addImagesUrl(product, req)),
+    products: products,
   });
 });
 
 exports.getProduct = asyncHandler(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate('reviews');
 
   if (!product) throw new AppError('Không tìm thấy sản phẩm với id này', 404);
 
-  // TODO api features
   return res.status(200).json({
     status: 'success',
-    product: product.addImagesUrl(product, req),
+    product: product,
   });
 });
 
@@ -86,7 +81,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 
   return res.status(201).json({
     status: 'success',
-    product: product.addImagesUrl(product, req),
+    product: product,
   });
 });
 
@@ -107,7 +102,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     status: 'success',
-    product: product.addImagesUrl(product, req),
+    product: product,
   });
 });
 

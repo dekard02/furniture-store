@@ -1,5 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
+
+dotenv.config({ path: './.env' });
+
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const AppError = require('./errors/AppError');
@@ -11,7 +14,6 @@ const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const orderRouter = require('./routes/orderRoutes');
 
-dotenv.config({ path: './.env' });
 const app = express();
 app.use('/public', express.static('./public'));
 

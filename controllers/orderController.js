@@ -20,7 +20,7 @@ exports.getAllOrders = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     status: 'success',
     page: features.page,
-    orders: orders,
+    orders,
   });
 });
 
@@ -35,7 +35,7 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     status: 'success',
-    order: order.addImageUrl(order, req),
+    order,
   });
 });
 
@@ -82,6 +82,6 @@ exports.deleteOrder = asyncHandler(async (req, res, next) => {
 
   return res.status(204).json({
     status: 'success',
-    order: null,
+    order,
   });
 });

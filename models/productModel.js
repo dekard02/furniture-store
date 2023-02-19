@@ -1,6 +1,6 @@
+const rootUrl = process.env.ROOT_URL || '';
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const getRootUrl = require('../utils/getRootUrl');
 const AppError = require('../errors/AppError');
 
 const productSchema = new mongoose.Schema(
@@ -88,6 +88,27 @@ productSchema.path('name').validate(async function (value) {
   return true;
 }, 'Tên sản phẩm này đã tồn tại');
 
+productSchema.pre(/^find/, function (next) {
+  this.projection({
+    name: 1,
+    slug: 1,
+    description: 1,
+    price: 1,
+    quantity: 1,
+    ratingsAverage: 1,
+    ratingsQuantity: 1,
+    isDeleted: 1,
+    images: {
+      $map: {
+        input: '$images',
+        as: 'image',
+        in: { $concat: [rootUrl, '/', '$$image'] },
+      },
+    },
+  });
+  next();
+});
+
 productSchema.pre(/(u|U)pdate/, async function (next) {
   const { _id } = this.getQuery();
   const updatedName = this.get('name');
@@ -110,7 +131,7 @@ productSchema.pre('save', function (next) {
 productSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'categories',
-    select: 'name description',
+    select: 'name slug description',
   });
 
   next();
@@ -121,14 +142,6 @@ productSchema.virtual('reviews', {
   foreignField: 'product',
   localField: '_id',
 });
-
-productSchema.methods.addImagesUrl = function (doc, req) {
-  const newDoc = Object.create(doc);
-  for (let i = 0; i < doc.images.length; i++) {
-    newDoc.images[i] = `${getRootUrl(req)}/${doc.images[i]}`;
-  }
-  return newDoc;
-};
 
 productSchema.methods.didUserBuy = async function (productId, userId) {
   const purchasedProduct = await mongoose.models.Order.aggregate([

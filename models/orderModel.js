@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const getRootUrl = require('../utils/getRootUrl');
 
 const orderSchema = new mongoose.Schema(
   {
@@ -37,9 +36,14 @@ const orderSchema = new mongoose.Schema(
             required: [true, 'Sản phẩm không được bỏ trống'],
             validate: [
               {
-                // TO DO
-                validator: async (v) => {},
-                message: 'Sản phẩm này không tồn tại',
+                validator: async (value) => {
+                  const count = await mongoose.models.Product.countDocuments({
+                    _id: value,
+                  });
+
+                  return count;
+                },
+                message: 'Không tồn tại sản phẩm với id này',
               },
             ],
           },
@@ -49,20 +53,18 @@ const orderSchema = new mongoose.Schema(
           amount: {
             type: Number,
             required: [true, 'Số lượng sản phẩm không được bỏ trống'],
+            // validate: {
+            //   // TODO:
+            //   validator: async (v) => {},
+            //   message: 'Sản phẩm đã hết hàng',
+            // },
           },
         },
       ],
-      validate: [
-        {
-          validator: (v) => Array.isArray(v) && v.length > 0,
-          message: 'Không được bỏ trống danh sách sản phẩm',
-        },
-        {
-          // TODO
-          validator: async (v) => {},
-          message: 'Sản phẩm đã hết hàng',
-        },
-      ],
+      validate: {
+        validator: (v) => Array.isArray(v) && v.length > 0,
+        message: 'Không được bỏ trống danh sách sản phẩm',
+      },
     },
   },
   {
@@ -104,21 +106,18 @@ orderSchema.pre(/^find/, async function (next) {
   next();
 });
 
-orderSchema.methods.addImageUrl = (doc, req) => {
-  const newDoc = Object.create(doc);
-  if (doc.user?.image) {
-    newDoc.user.image = `${getRootUrl(req)}/${doc.user.image}`;
-  }
+// orderSchema.methods.addImageUrl = function (doc, req) {
+//   if (doc.user?.image) {
+//     doc.user.image = `${getRootUrl(req)}/${doc.user.image}`;
+//   }
 
-  for (let i = 0; i < doc.products.length; i++) {
-    const { product } = doc.products[i];
-    newDoc.products[i].product.images = product.images.map(
-      (img) => `${getRootUrl(req)}/${img}`
-    );
-  }
-
-  return newDoc;
-};
+//   for (let i = 0; i < doc.products.length; i++) {
+//     const { product } = doc.products[i];
+//     doc.products[i].product.images = product.images.map(
+//       (img) => `${getRootUrl(req)}/${img}`
+//     );
+//   }
+// };
 
 const Order = mongoose.model('Order', orderSchema);
 
