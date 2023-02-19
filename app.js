@@ -33,7 +33,11 @@ app.all('*', (req, res, next) => {
 app.use(globalErrorHandler);
 
 mongoose.set('strictQuery', true);
-const DB = process.env.DATABASE;
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+
 mongoose.connect(DB).then(() => {
   console.log('Connect DB successfully!!');
 
