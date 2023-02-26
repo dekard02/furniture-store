@@ -4,21 +4,21 @@ const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.get('/', auth.authenticate, orderController.getAllOrders);
-router.get('/:id', auth.authenticate, orderController.getOrder);
-router.post('/', auth.authenticate, orderController.createOrder);
+router.get('/', auth.protect, orderController.getAllOrders);
+router.get('/:id', auth.protect, orderController.getOrder);
+router.post('/', auth.protect, orderController.createOrder);
 
 router.put(
   '/:id',
-  auth.authenticate,
-  auth.authorize('ADMIN', 'STAFF', 'MANAGER'),
+  auth.protect,
+  auth.authorize('STAFF', 'MANAGER'),
   orderController.updateOrder
 );
 
 router.delete(
   '/:id',
-  auth.authenticate,
-  auth.authorize('ADMIN'),
+  auth.protect,
+  auth.authorize('MANAGER'),
   orderController.deleteOrder
 );
 

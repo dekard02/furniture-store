@@ -9,16 +9,16 @@ router.get('/', productController.getAllProduct);
 router.get('/:id', productController.getProduct);
 router.post(
   '/',
-  auth.authenticate,
-  auth.authorize('ADMIN', 'MANAGER', 'STAFF'),
+  auth.protect,
+  auth.authorize('MANAGER', 'STAFF'),
   productController.uploadProductImages,
   productController.createProduct
 );
 
 router.put(
   '/:id',
-  auth.authenticate,
-  auth.authorize('ADMIN', 'MANAGER', 'STAFF'),
+  auth.protect,
+  auth.authorize('MANAGER', 'STAFF'),
   productController.uploadProductImages,
   productController.updateProduct
 );

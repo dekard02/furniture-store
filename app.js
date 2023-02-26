@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const AppError = require('./errors/AppError');
 const globalErrorHandler = require('./middlewares/error');
+const auth = require('./middlewares/auth');
 
 const categoryRouter = require('./routes/categoryRoutes');
 const productRouter = require('./routes/productRoutes');
@@ -20,6 +21,7 @@ app.use('/public', express.static('./public'));
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
+app.use(auth.authenticate);
 app.use('/api/v1/', authRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/products', productRouter);

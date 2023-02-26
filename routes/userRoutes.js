@@ -4,32 +4,32 @@ const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.get('/me', auth.authenticate, userController.me);
+router.get('/me', auth.protect, userController.me);
 router.put(
   '/me',
-  auth.authenticate,
+  auth.protect,
   userController.uploadImage,
   userController.updateMe
 );
 
 router.get(
   '/',
-  auth.authenticate,
-  auth.authorize('ADMIN', 'MANAGER'),
+  auth.protect,
+  auth.authorize('MANAGER'),
   userController.getAllUsers
 );
 
 router.get(
   '/:id',
-  auth.authenticate,
-  auth.authorize('ADMIN', 'MANAGER'),
+  auth.protect,
+  auth.authorize('MANAGER'),
   userController.getUser
 );
 
 router.put(
   '/:id',
-  auth.authenticate,
-  auth.authorize('ADMIN', 'MANAGER'),
+  auth.protect,
+  auth.authorize('MANAGER'),
   userController.uploadImage,
   userController.updateUser
 );

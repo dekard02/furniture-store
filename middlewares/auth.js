@@ -14,24 +14,31 @@ exports.authenticate = asyncHandler(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-  if (!token) throw new AppError('Hãy đăng nhập để tiếp tục', 401);
 
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  if (token) {
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    throw new AppError('Tài khoản này không còn tồn tại nữa', 401);
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      throw new AppError('Tài khoản đang đăng nhập không tồn tại nữa', 401);
+    }
+
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      throw new AppError(
+        'Tài khoản đang đăng nhập đã đổi mật khẩu gần đây. Đăng nhập lại để tiếp tục',
+        401
+      );
+    }
+
+    res.locals.user = currentUser;
+    req.user = currentUser;
   }
 
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-    throw new AppError(
-      'Tài khoản đã đổi mật khẩu gần đây. Đăng nhập để tiếp tục',
-      401
-    );
-  }
+  return next();
+});
 
-  res.locals.user = currentUser;
-  req.user = currentUser;
+exports.protect = asyncHandler(async (req, res, next) => {
+  if (!req.user) throw new AppError('Hãy đăng nhập để tiếp tục', 401);
   return next();
 });
 
