@@ -34,6 +34,8 @@ const saveUserImage = async (file, userId) => {
 
 exports.me = asyncHandler(async (req, res, next) => {
   const profile = await User.findById(req.user.get('_id'));
+  profile.password = undefined;
+
   res.status(200).json({
     status: 'success',
     profile,
@@ -57,6 +59,7 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
     runValidators: true,
     new: true,
   });
+  user.password = undefined;
 
   return res.status(200).json({
     status: 'success',
@@ -77,7 +80,10 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     status: 'success',
     page: features.page,
-    users,
+    users: users.map((user) => {
+      user.password = undefined;
+      return user;
+    }),
   });
 });
 
@@ -85,6 +91,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) throw new AppError('Không tìm thấy người dùng với id này', 400);
+  user.password = undefined;
 
   return res.status(200).json({
     status: 'success',
@@ -108,6 +115,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     runValidators: true,
     new: true,
   });
+  user.password = undefined;
 
   return res.status(200).json({
     status: 'success',

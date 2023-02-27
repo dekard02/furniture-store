@@ -22,14 +22,13 @@ const createSendToken = (user, statusCode, req, res) => {
 
   res.cookie('jwt', token, cookieOptions);
 
-  const userInfo = user.addImageUrl(user, req);
-  userInfo.password = undefined;
-  userInfo.passwordConfirm = undefined;
+  user.password = undefined;
+  user.passwordConfirm = undefined;
 
   res.status(statusCode).json({
     status: 'success',
     token,
-    user: userInfo,
+    user,
   });
 };
 
@@ -62,7 +61,8 @@ exports.login = asyncHandler(async (req, res, next) => {
     throw new AppError('Nhập email và mật khẩu', 400);
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email });
+  console.log(user);
   if (!user || !(await user.checkPassword(password, user.password))) {
     throw new AppError('Mật khẩu hoặc email không đúng!', 401);
   }
@@ -71,7 +71,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 });
 
 exports.updatePassword = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.get('_id')).select('+password');
+  const user = await User.findById(req.user.get('_id'));
 
   if (!(await user.checkPassword(req.body.currentPassword, user.password))) {
     throw new AppError('Mật khẩu cũ không đúng', 400);
