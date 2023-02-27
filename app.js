@@ -5,6 +5,7 @@ dotenv.config({ path: './.env' });
 
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const AppError = require('./errors/AppError');
 const globalErrorHandler = require('./middlewares/error');
 const auth = require('./middlewares/auth');
@@ -17,6 +18,8 @@ const orderRouter = require('./routes/orderRoutes');
 
 const app = express();
 app.use('/public', express.static('./public'));
+
+app.use(cors());
 
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
