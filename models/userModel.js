@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Mật khẩu không được bỏ trống'],
       minLength: [8, 'Mật khẩu tối thiểu 8 ký tự'],
-      select: false,
     },
     passwordConfirm: {
       type: String,
@@ -67,8 +66,15 @@ userSchema.pre(/^find/, function (next) {
   this.projection({
     fullName: 1,
     email: 1,
-    image: { $concat: [rootUrl, '/', '$image'] },
+    image: {
+      $cond: {
+        if: { $regexMatch: { input: '$image', regex: 'http' } },
+        then: '$image',
+        else: { $concat: [rootUrl, '/', '$image'] },
+      },
+    },
     passwordChangedAt: 1,
+    password: 1,
     phoneNumber: 1,
     address: 1,
     role: 1,

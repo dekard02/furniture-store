@@ -102,7 +102,13 @@ productSchema.pre(/^find/, function (next) {
       $map: {
         input: '$images',
         as: 'image',
-        in: { $concat: [rootUrl, '/', '$$image'] },
+        in: {
+          $cond: {
+            if: { $regexMatch: { input: '$$image', regex: 'http' } },
+            then: '$$image',
+            else: { $concat: [rootUrl, '/', '$$image'] },
+          },
+        },
       },
     },
   });
