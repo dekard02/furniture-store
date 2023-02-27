@@ -15,11 +15,14 @@ class APIFeatures {
 
   filter() {
     const queryObj = { ...this.requestQuery };
-    const excludeFields = ['page', 'sort', 'limit', 'fields', 'q'];
+    const excludeFields = ['page', 'sort', 'limit', 'fields', 'perPage', 'q'];
     excludeFields.forEach((el) => delete queryObj[el]);
 
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(
+      /\b(gt|gte|lt|lte|regex)\b/g,
+      (match) => `$${match}`
+    );
     this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
 
     return this;
