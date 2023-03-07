@@ -36,7 +36,7 @@ const orderSchema = new mongoose.Schema(
             required: [true, 'Sản phẩm không được bỏ trống'],
             validate: [
               {
-                validator: async (value) => {
+                validator: async function (value) {
                   const count = await mongoose.models.Product.countDocuments({
                     _id: value,
                   });
@@ -53,11 +53,16 @@ const orderSchema = new mongoose.Schema(
           amount: {
             type: Number,
             required: [true, 'Số lượng sản phẩm không được bỏ trống'],
-            // validate: {
-            //   // TODO:
-            //   validator: async (v) => {},
-            //   message: 'Sản phẩm đã hết hàng',
-            // },
+            min: [1, 'Số lượng sản phẩm phải lớn hơn 0'],
+            validate: {
+              validator: async function (v) {
+                const product = await mongoose.models.Product.findById(
+                  this.products.product
+                );
+                return v <= product.inStock;
+              },
+              message: 'Sản phẩm đã hết hàng',
+            },
           },
         },
       ],
@@ -79,20 +84,21 @@ const orderSchema = new mongoose.Schema(
 orderSchema.index({ fullName: 1, phoneNumber: 1 });
 orderSchema.index({ '$**': 'text' });
 
-// add current price
 orderSchema.pre('save', async function (next) {
   this.products = await Promise.all(
     this.products.map(async (productObj) => {
-      const productDoc = await mongoose.models.Product.findById(
-        productObj.product
+      // decrease product inStock
+      const productDoc = await mongoose.models.Product.findByIdAndUpdate(
+        productObj.product,
+        { $inc: { inStock: -productObj.amount } }
       );
+      // add current price
       return { ...productObj, price: productDoc.price };
     })
   );
+
   next();
 });
-
-// TODO decrease product amount
 
 orderSchema.pre(/^find/, async function (next) {
   this.populate({
@@ -105,19 +111,6 @@ orderSchema.pre(/^find/, async function (next) {
 
   next();
 });
-
-// orderSchema.methods.addImageUrl = function (doc, req) {
-//   if (doc.user?.image) {
-//     doc.user.image = `${getRootUrl(req)}/${doc.user.image}`;
-//   }
-
-//   for (let i = 0; i < doc.products.length; i++) {
-//     const { product } = doc.products[i];
-//     doc.products[i].product.images = product.images.map(
-//       (img) => `${getRootUrl(req)}/${img}`
-//     );
-//   }
-// };
 
 const Order = mongoose.model('Order', orderSchema);
 

@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
       default: 'CUSTOMER',
     },
     active: {
-      type: String,
+      type: Boolean,
       default: true,
     },
   },
@@ -69,7 +69,7 @@ userSchema.pre(/^find/, function (next) {
     image: {
       $cond: {
         if: { $regexMatch: { input: '$image', regex: 'http' } },
-        then: '$image',
+        then: { $concat: ['/', '$image'] },
         else: { $concat: [rootUrl, '/', '$image'] },
       },
     },
@@ -79,6 +79,8 @@ userSchema.pre(/^find/, function (next) {
     address: 1,
     role: 1,
     active: 1,
+    createdAt: 1,
+    updatedAt: 1,
   });
   next();
 });

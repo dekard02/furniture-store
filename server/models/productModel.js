@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Không được bỏ trống giá bán'],
       min: [0, 'Giá bán không được là số âm'],
     },
-    quantity: {
+    inStock: {
       type: Number,
       default: 0,
     },
@@ -94,7 +94,7 @@ productSchema.pre(/^find/, function (next) {
     slug: 1,
     description: 1,
     price: 1,
-    quantity: 1,
+    inStock: 1,
     ratingsAverage: 1,
     ratingsQuantity: 1,
     isDeleted: 1,
@@ -105,12 +105,14 @@ productSchema.pre(/^find/, function (next) {
         in: {
           $cond: {
             if: { $regexMatch: { input: '$$image', regex: 'http' } },
-            then: '$$image',
+            then: { $concat: ['/', '$$image'] },
             else: { $concat: [rootUrl, '/', '$$image'] },
           },
         },
       },
     },
+    createdAt: 1,
+    updatedAt: 1,
   });
   next();
 });
