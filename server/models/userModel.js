@@ -1,4 +1,4 @@
-const rootUrl = process.env.ROOT_URL || '';
+const rootUrl = process.env.ROOT_URL || '/';
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -69,7 +69,7 @@ userSchema.pre(/^find/, function (next) {
     image: {
       $cond: {
         if: { $regexMatch: { input: '$image', regex: 'http' } },
-        then: { $concat: ['/', '$image'] },
+        then: '$image',
         else: { $concat: [rootUrl, '/', '$image'] },
       },
     },

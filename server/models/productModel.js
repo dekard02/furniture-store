@@ -1,4 +1,4 @@
-const rootUrl = process.env.ROOT_URL || '';
+const rootUrl = process.env.ROOT_URL || '/';
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const AppError = require('../errors/AppError');
@@ -105,7 +105,7 @@ productSchema.pre(/^find/, function (next) {
         in: {
           $cond: {
             if: { $regexMatch: { input: '$$image', regex: 'http' } },
-            then: { $concat: ['/', '$$image'] },
+            then: '$$image',
             else: { $concat: [rootUrl, '/', '$$image'] },
           },
         },
