@@ -221,16 +221,20 @@ const CheckoutPage = () => {
                 cartItems.length > 0 &&
                 cartItems.map((order) => (
                   <div
-                    key={order.id}
+                    key={order._id}
                     className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md"
                   >
                     <div className="relative">
                       <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
-                        <img
-                          className="object-cover w-full rounded-md"
-                          src={order.thumbnail}
-                          alt=""
-                        />
+                        {order && order.images ? (
+                          <img
+                            className="object-cover w-full rounded-md"
+                            src={order.images[0]}
+                            alt=""
+                          />
+                        ) : (
+                          <></>
+                        )}
                       </div>
                       <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
                         {order.quantity}
@@ -246,7 +250,7 @@ const CheckoutPage = () => {
                         </p>
                       </div>
                       <span className="text-sm font-light text-textPrimary">
-                        {order.salePrice * order.quantity}
+                        {(order.price * order.quantity).toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -258,7 +262,7 @@ const CheckoutPage = () => {
                   Tạm Tính
                 </span>
                 <p className="text-sm font-light text-textPrimary">
-                  {cartItemsTotal}
+                  {cartItemsTotal.toLocaleString()}
                 </p>
               </div>
               <div className="flex justify-between">
@@ -266,7 +270,7 @@ const CheckoutPage = () => {
                   Phí vận chuyển
                 </span>
                 <p className="text-sm font-light text-textPrimary">
-                  {priceShipping}
+                  {priceShipping.toLocaleString()}
                 </p>
               </div>
             </div>

@@ -6,7 +6,7 @@ import dealbanner from "../../assets/dealbanner.webp";
 import Button from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 import { ProductsData } from "../data/ProductData";
-const WoodenFurniture = () => {
+const WoodenFurniture = ({ data = [] }) => {
   const navigate = useNavigate();
   return (
     <StyledWoodenFurniture className="relative flex gap-x-6">
@@ -19,10 +19,11 @@ const WoodenFurniture = () => {
             <img src={shape} alt="" />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-x-7 gap-y-4">
-          {ProductsData.map((item, index) => {
-            return <ProductItem item={item} key={item.id} />;
-          })}
+        <div className="grid grid-cols-3 gap-x-5 gap-y-4">
+          {data.length > 0 &&
+            data.map((item, index) => {
+              return <ProductItem item={item} key={item._id} />;
+            })}
         </div>
       </div>
       <div className="flex-1">
@@ -76,6 +77,7 @@ const StyledWoodenFurniture = styled.div`
   .product-item-price,
   .product-item-colors {
     justify-content: flex-start;
+    column-gap: 4px;
   }
   .product-item-content {
     display: flex;
@@ -87,5 +89,6 @@ const StyledWoodenFurniture = styled.div`
     font-size: 10px;
     padding: 4px 13px;
     white-space: nowrap;
+    margin-top: initial;
   }
 `;

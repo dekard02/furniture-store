@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
+  console.log(cartItems);
   const cartItemsTotal = useSelector(cartItemsTotalSelector);
   useEffect(() => {
     // 👇️ scroll to top on page load
@@ -45,7 +46,7 @@ const CartPage = () => {
               </div>
               {cartItems.length > 0 ? (
                 cartItems.map((item, index) => {
-                  return <CartItem key={item.id} item={item} />;
+                  return <CartItem key={item._id} item={item} />;
                 })
               ) : (
                 <div className="my-3 text-2xl font-semibold text-center text-textPrimary">
@@ -57,7 +58,7 @@ const CartPage = () => {
               <div className="flex items-center font-semibold gap-x-3 text-secondary">
                 Tổng tiền:
                 <span className="text-lg font-medium text-bgPrimary">
-                  {cartItemsTotal}
+                  {cartItemsTotal.toLocaleString()}
                 </span>
               </div>
               <div className="flex items-center gap-x-3">

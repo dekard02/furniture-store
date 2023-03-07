@@ -8,6 +8,7 @@ import styled from "styled-components";
 import handleAddToWishlist from "../../utils/handleAddToWishlist";
 import { useNavigate } from "react-router-dom";
 const ProductDetailItem = ({ item = {}, isQickView = false }) => {
+  const [imgPreview, setImgPreview] = useState("");
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,39 +18,53 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
   const handleDec = () => {
     setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
   };
+  const handlePreviewProduct = (image) => setImgPreview(image);
   useEffect(() => {
     setQuantity(1);
   }, []);
+  useEffect(() => {
+    if (!item) {
+      return null;
+    }
+    if (item && item.images) {
+      setImgPreview(item.images[0]);
+    }
+  }, [item]);
 
   return (
     <StyledProductDetailItem className="grid grid-cols-2 gap-x-5">
       <div className="flex flex-col gap-y-5">
         <div className="product-detail-image">
-          <img className="rounded-md" src={item.thumbnail} alt="" />
+          {item && item.images ? (
+            <img className="rounded-md" src={imgPreview} alt="" />
+          ) : (
+            <></>
+          )}
         </div>
         <div className="grid grid-cols-3 gap-x-7">
-          <div className="relative border cursor-pointer border-bgPrimary">
-            <img
-              src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/big-product4.webp"
-              alt=""
-            />
-          </div>
-          <div className="relative border border-gray-400 cursor-pointer">
-            <img
-              src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/big-product5.webp"
-              alt=""
-            />
-          </div>
-          <div className="relative border border-gray-400 cursor-pointer">
-            <img
-              src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/big-product2.webp"
-              alt=""
-            />
-          </div>
+          {item.images &&
+            item.images.length > 0 &&
+            item.images
+              .filter((item, index) => index < 3)
+              .map((image, index) => {
+                return (
+                  <div
+                    onClick={() => handlePreviewProduct(image)}
+                    key={index}
+                    className={`relative image-preview border cursor-pointer border-gray-400 ${
+                      image === imgPreview ? "active" : ""
+                    }`}
+                  >
+                    <img src={image} alt="" />
+                  </div>
+                );
+              })}
         </div>
       </div>
       <div className="flex flex-col gap-y-4">
-        <h3 className="text-3xl font-semibold text-secondary">{item.name}</h3>
+        <h3 className="text-3xl pr-9 font-semibold text-secondary">
+          {item.name}
+        </h3>
         <div className="flex gap-x-3">
           <span className="text-lg font-medium text-bgPrimary">
             {item.price}
@@ -65,12 +80,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
           <i className="text-base text-yellow-500 bi bi-star-fill"></i>
           <i className="text-base text-yellow-500 bi bi-star-fill"></i>
         </div>
-        <span className="text-base text-textPrimary">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut numquam
-          ullam is recusandae laborum explicabo id sequi quisquam, ab sunt
-          deleniti quidem ea animi facilis quod nostrum odit! Repellendus
-          voluptas suscipit.
-        </span>
+        <span className="text-base text-textPrimary">{item.description}</span>
         <div className="flex gap-x-3">
           <Quantity
             handleDec={handleDec}
@@ -103,7 +113,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
             </Button>
           </div>
         )}
-        <div className="flex items-center gap-x-2">
+        {/* <div className="flex items-center gap-x-2">
           <span className="text-lg font-semibold text-secondary">Barcode:</span>
           <span className="text-base font-normal text-gray-500">565461</span>
         </div>
@@ -114,10 +124,18 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
         <div className="flex items-center gap-x-2">
           <span className="text-lg font-semibold text-secondary">Vendor:</span>
           <span className="text-base font-normal text-gray-500">Belo</span>
-        </div>
+        </div> */}
         <div className="flex items-center gap-x-2">
-          <span className="text-lg font-semibold text-secondary">Type:</span>
-          <span className="text-base font-normal text-gray-500">Sofa</span>
+          <span className="text-lg font-semibold text-secondary">
+            Danh mục:
+          </span>
+          {item && item.categories ? (
+            <span className="text-base font-normal text-gray-500">
+              {item.categories[0].name}
+            </span>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="flex items-center gap-x-2">
           <span className="text-lg font-semibold text-secondary">
@@ -127,7 +145,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
         </div>
         <div className="flex flex-col ">
           <span className="text-lg font-semibold text-secondary">
-            Guaranteed Safe Checkout
+            Thanh Toán An Toàn
           </span>
           <div className="relative mt-2">
             <img
@@ -153,5 +171,8 @@ const StyledProductDetailItem = styled.div`
     &:hover {
       background-color: #121a25;
     }
+  }
+  .image-preview.active {
+    border: 1px solid #f51c1c;
   }
 `;

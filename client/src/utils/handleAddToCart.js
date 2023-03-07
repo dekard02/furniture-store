@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import { addToCart } from "../redux-toolkit/cartSlice/cartSlice";
 
 function handleAddToCart(product, quantity = 1, dispatch) {
+  console.log(product);
   dispatch(
     addToCart({
       ...product,

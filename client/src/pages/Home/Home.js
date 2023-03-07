@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Banner from "../../components/Banner/Banner";
 import BannerSection from "../../components/BannerSection/BannerSection";
 import BannerVideo from "../../components/BannerVideo/BannerVideo";
@@ -9,12 +10,16 @@ import Testimonial from "../../components/Testimonial/Testimonial";
 import WoodenFurniture from "../../components/WoodenFurniture/WoodenFurniture";
 
 const Home = () => {
+  const [data, setData] = useState([]);
   useEffect(() => {
     document.title = "Trang Chủ";
     async function fetchProductsData() {
       try {
         const res = await axios.get(`http://localhost:8000/api/v1/products`);
-        console.log(res);
+        if (res && res.data) {
+          setData(res.data);
+          console.log(res.data);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -26,8 +31,8 @@ const Home = () => {
       <Banner />
       <div className="wrapper-layout">
         <BannerSection />
-        <Populars />
-        <WoodenFurniture />
+        <Populars data={data.products} />
+        <WoodenFurniture data={data.products} />
         <BannerVideo />
         <Testimonial />
       </div>
