@@ -1,4 +1,4 @@
-const rootUrl = process.env.ROOT_URL || '';
+const rootUrl = process.env.ROOT_URL || '/';
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
       default: 'CUSTOMER',
     },
     active: {
-      type: String,
+      type: Boolean,
       default: true,
     },
   },
@@ -79,6 +79,8 @@ userSchema.pre(/^find/, function (next) {
     address: 1,
     role: 1,
     active: 1,
+    createdAt: 1,
+    updatedAt: 1,
   });
   next();
 });
