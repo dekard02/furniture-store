@@ -16,22 +16,28 @@ const ProductItem = ({ item = {} }) => {
   };
 
   return (
-    <StyledProductItem className={`product-item relative`}>
+    <StyledProductItem className={`product-item fex flex-col relative`}>
       <div className="relative product-thumbnail">
         <div
-          onClick={() => navigate(`/products/${item.id}`)}
-          className="relative overflow-hidden cursor-pointer product-image"
+          onClick={() => navigate(`/products/${item._id}`)}
+          className="relative h-[250px] flex-shrink-0 overflow-hidden cursor-pointer product-image"
         >
-          <img
-            className="transition-all duration-700 first-image"
-            src={item.thumbnail}
-            alt=""
-          />
-          <img
-            className="absolute inset-0 invisible transition-all duration-700 opacity-0 second-image"
-            src={item.subThumbnail}
-            alt=""
-          />
+          {item && item.images ? (
+            <>
+              <img
+                className="transition-all h-[250px] duration-700 first-image"
+                src={item?.images[0]}
+                alt=""
+              />
+              <img
+                className="absolute h-[250px] inset-0 invisible transition-all duration-700 opacity-0 second-image"
+                src={item?.images[1]}
+                alt=""
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="absolute bottom-0 left-0 right-0 flex justify-center invisible transition-all duration-500 opacity-0 product-action gap-x-2">
           <Tippy content="Quickview">
@@ -60,7 +66,7 @@ const ProductItem = ({ item = {} }) => {
           </Tippy>
         </div>
       </div>
-      <div className="flex flex-col items-center p-3 border border-t-0 border-gray-300 cursor-default product-item-content ">
+      <div className="flex flex-col flex-1 items-center h-[calc(100%-250px)] p-3 border border-t-0 border-gray-300 cursor-default product-item-content ">
         <div className="flex flex-col items-center gap-y-2">
           <div className="flex items-center justify-center w-full product-item-colors gap-x-3">
             <span className="w-3 h-3 rounded-full bg-bgPrimary"></span>
@@ -68,7 +74,7 @@ const ProductItem = ({ item = {} }) => {
             <span className="w-3 h-3 bg-green-500 rounded-full"></span>
             <span className="w-3 h-3 bg-blue-400 rounded-full"></span>
           </div>
-          <h3 className="text-base font-semibold cursor-pointer hover:text-bgPrimary text-secondary">
+          <h3 className="text-base  font-semibold cursor-pointer hover:text-bgPrimary text-secondary">
             {item.name}
           </h3>
           <div className="flex items-center justify-center w-full product-item-price gap-x-3">
@@ -82,7 +88,7 @@ const ProductItem = ({ item = {} }) => {
         </div>
         <button
           onClick={() => handleAddToCart(item, 1, dispatch)}
-          className="flex items-center invisible px-3 py-2 text-sm font-medium text-white transition-all rounded-md opacity-0 add-to-cart bg-bgPrimary hover:bg-secondary gap-x-2"
+          className="flex mt-auto items-center invisible px-3 py-2 text-sm font-medium text-white transition-all rounded-md opacity-0 add-to-cart bg-bgPrimary hover:bg-secondary gap-x-2"
         >
           <i className="bi bi-cart-plus"></i>
           Add to cart

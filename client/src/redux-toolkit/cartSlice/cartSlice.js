@@ -13,7 +13,7 @@ export const cartSlice = createSlice({
     addToCart: (state, action) => {
       let newProduct = action.payload;
       let index = state.cartItems.findIndex(
-        (product, index) => product.id === newProduct.id
+        (product, index) => product._id === newProduct._id
       );
       if (index !== -1) {
         state.cartItems[index].quantity += newProduct.quantity;
@@ -24,7 +24,7 @@ export const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(
-        (item, index) => item.id !== action.payload.id
+        (item, index) => item._id !== action.payload._id
       );
       localStorage.setItem("cart_items", JSON.stringify(state.cartItems));
     },
@@ -33,8 +33,8 @@ export const cartSlice = createSlice({
       localStorage.setItem("cart_items", JSON.stringify(state.cartItems));
     },
     setQuantityCart: (state, action) => {
-      let { id, type } = action.payload;
-      let index = state.cartItems.findIndex((item) => item.id === id);
+      let { _id, type } = action.payload;
+      let index = state.cartItems.findIndex((item) => item._id === _id);
       if (index !== -1) {
         if (type === "+") {
           state.cartItems[index].quantity += 1;

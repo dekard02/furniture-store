@@ -36,7 +36,7 @@ const WishList = () => {
               </div>
               {wishlists.length > 0 ? (
                 wishlists.map((item, index) => {
-                  return <CartItem isWishList key={item.id} item={item} />;
+                  return <CartItem isWishList key={item._id} item={item} />;
                 })
               ) : (
                 <div className="my-3 text-2xl font-semibold text-center text-textPrimary">

@@ -6,7 +6,7 @@ import order3 from "../../assets/order3.webp";
 import { NavLink } from "react-router-dom";
 import ProductItem from "../ProductItem/ProductItem";
 import { ProductsData } from "../data/ProductData";
-const Populars = () => {
+const Populars = ({ data = [] }) => {
   return (
     <StyledPopular className="section-populars">
       <div className="pb-12">
@@ -28,10 +28,11 @@ const Populars = () => {
             Monitor
           </div>
         </div>
-        <div className="grid gap-y-5 grid-cols-4 gap-x-7">
-          {ProductsData.map((item, index) => {
-            return <ProductItem key={item.id} item={item} />;
-          })}
+        <div className="grid gap-y-5 grid-cols-5 gap-x-7">
+          {data.length > 0 &&
+            data.map((product, index) => {
+              return <ProductItem key={product._id} item={product} />;
+            })}
         </div>
       </div>
       <div className="grid pb-20 grid-cols-3 gap-x-7">
