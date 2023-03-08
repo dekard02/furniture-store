@@ -1,6 +1,7 @@
 const rootUrl = process.env.ROOT_URL || '/';
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,7 +11,10 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
+      lowercase: true,
       required: [true, 'Email không được bỏ trống'],
+      validate: [validator.isEmail, 'Email không hợp lẹ'],
     },
     password: {
       type: String,

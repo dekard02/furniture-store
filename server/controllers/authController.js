@@ -33,6 +33,9 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 
 exports.signup = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (user) throw new AppError('Đã tồn tại tài khoản với email này', 400);
+
   const userInfo = filterObject(
     req.body,
     'fullName',
@@ -62,7 +65,6 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email });
-  console.log(user);
   if (!user || !(await user.checkPassword(password, user.password))) {
     throw new AppError('Mật khẩu hoặc email không đúng!', 401);
   }
