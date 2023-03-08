@@ -12,7 +12,8 @@ import Button from "../Button/Button";
 const CartItem = ({ item = {}, isWishList = false }) => {
   const dispatch = useDispatch();
 
-  const { id, thumbnail, name, salePrice, quantity } = item;
+  const { _id, images, name, price, quantity } = item;
+  console.log(item);
   const handleRemoveFromCart = (productNeedRemove) => {
     Swal.fire({
       text: "Bạn muốn xóa sản phẩm này khỏi giỏ hàng?",
@@ -32,12 +33,12 @@ const CartItem = ({ item = {}, isWishList = false }) => {
     });
   };
   const updateQuantity = (type) => {
-    dispatch(setQuantityCart({ id, type }));
+    dispatch(setQuantityCart({ _id, type }));
   };
   return (
     <StyledCartItem className="flex py-3 border-t border-b border-gray-300 cart-row">
       <div className="flex w-5/12 gap-x-1">
-        <div className="relative flex items-center cursor-pointer">
+        <div className="relative flex-shrink-0 flex items-center cursor-pointer">
           {isWishList && (
             <button
               onClick={() => handleRemoveFromWishlist(item, dispatch)}
@@ -46,7 +47,11 @@ const CartItem = ({ item = {}, isWishList = false }) => {
               <i className="bi text-white leading-[0px]  text-lg bi-x-lg"></i>
             </button>
           )}
-          <img className="rounded-md w-28" src={thumbnail} alt="" />
+          {images ? (
+            <img className="rounded-md w-28" src={images[0]} alt="" />
+          ) : (
+            <></>
+          )}
         </div>
         <div className="flex flex-col items-start justify-center p-2">
           <h5 className="text-base font-semibold transition-all duration-500 cursor-pointer text-secondary whitespace-nowrap hover:text-primary">
@@ -61,7 +66,7 @@ const CartItem = ({ item = {}, isWishList = false }) => {
         }`}
       >
         <div className="flex items-center justify-center text-base font-semibold flex-center text-secondary">
-          330.000$
+          {price.toLocaleString()}
         </div>
         {isWishList && (
           <span className="flex items-center justify-center text-base font-light text-bgPrimary">
@@ -76,7 +81,7 @@ const CartItem = ({ item = {}, isWishList = false }) => {
             >
               -
             </div>
-            <div className="cart-quantity">{quantity}</div>
+            <div className="cart-quantity">{quantity.toLocaleString()}</div>
             <div
               onClick={() => updateQuantity("+")}
               className="select-none btn-increase"
@@ -87,7 +92,7 @@ const CartItem = ({ item = {}, isWishList = false }) => {
         )}
         <div className="flex items-center justify-center text-base font-semibold text-secondary">
           {!isWishList ? (
-            <span>{quantity * salePrice}</span>
+            <span>{(quantity * price).toLocaleString()}</span>
           ) : (
             <Button
               onClick={() => handleAddToCart(item, 1, dispatch)}

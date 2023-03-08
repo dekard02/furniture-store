@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ProductItem from "../../components/ProductItem/ProductItem";
 import Pagination from "@mui/material/Pagination";
 import { ProductsData } from "../data/ProductData";
-const ProductsSection = () => {
+const ProductsSection = ({ data = [] }) => {
   return (
     <StyledDiv className="products-section wrapper-layout section">
       <div className="flex gap-x-5 relative">
@@ -99,9 +99,10 @@ const ProductsSection = () => {
         </div>
         <div className="flex-1 flex flex-col gap-y-4">
           <div className="grid gap-y-5 grid-cols-3 gap-x-7">
-            {ProductsData.map((item, index) => {
-              return <ProductItem key={item.id} item={item} />;
-            })}
+            {data.length > 0 &&
+              data.map((item, index) => {
+                return <ProductItem key={item._id} item={item} />;
+              })}
           </div>
           <div className="text-center flex justify-center items-center mt-7">
             <Pagination count={4} />
