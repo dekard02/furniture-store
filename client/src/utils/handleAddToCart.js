@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { addToCart } from "../redux-toolkit/cartSlice/cartSlice";
+import { addToCart } from "../store/cartSlice/cartSlice";
 
 function handleAddToCart(product, quantity = 1, dispatch) {
   console.log(product);

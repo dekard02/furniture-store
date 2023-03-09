@@ -8,6 +8,7 @@ import styled from "styled-components";
 import handleAddToWishlist from "../../utils/handleAddToWishlist";
 import { useNavigate } from "react-router-dom";
 const ProductDetailItem = ({ item = {}, isQickView = false }) => {
+  const { price } = item;
   const [imgPreview, setImgPreview] = useState("");
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
         </h3>
         <div className="flex gap-x-3">
           <span className="text-lg font-medium text-bgPrimary">
-            {item.price}
+            {price?.toLocaleString()}
           </span>
           <span className="text-lg font-medium text-gray-400 line-through">
             $320.000

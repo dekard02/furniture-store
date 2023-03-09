@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button";
 import CartItem from "../../components/cartItem/CartItem";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { cartItemsTotalSelector } from "../../redux-toolkit/cartSlice/Selector";
+import { cartItemsTotalSelector } from "../../store/cartSlice/Selector";
 import { useNavigate } from "react-router-dom";
 const CartPage = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import ProductDetailItem from "../../../ProductDetailItem/ProductDetailItem";
-import { setCloseModalQuickView } from "../../../../redux-toolkit/global/globalSlice";
+import { setCloseModalQuickView } from "../../../../store/global/globalSlice";
 const QuickView = ({ item = {} }) => {
   const [selectedItem, setSelectedItem] = useState({});
   useEffect(() => {

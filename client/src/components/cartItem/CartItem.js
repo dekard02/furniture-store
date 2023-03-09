@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import {
   removeFromCart,
   setQuantityCart,
-} from "../../redux-toolkit/cartSlice/cartSlice";
+} from "../../store/cartSlice/cartSlice";
 import handleAddToCart from "../../utils/handleAddToCart";
 import handleRemoveFromWishlist from "../../utils/handleRemoveFromWishlist";
 import Button from "../Button/Button";

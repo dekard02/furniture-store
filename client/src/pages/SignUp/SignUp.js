@@ -10,9 +10,12 @@ import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { register } from "../../store/auth/userSlice";
 
 const schemaValidate = yup.object({
-  username: yup.string().required("Vui lòng nhập tên tài khoản"),
+  fullName: yup.string().required("Vui lòng nhập họ và tên"),
   email: yup
     .string()
     .email("Vui lòng nhập email hợp lệ!")
@@ -21,9 +24,14 @@ const schemaValidate = yup.object({
     .string()
     .min(8, "Vui lòng nhập mật khẩu ít nhất 8 kí tự!")
     .required("Vui lòng nhập mật khẩu!"),
+  passwordConfirm: yup
+    .string()
+    .required("Vui lòng xác nhận mật khẩu!")
+    .oneOf([yup.ref("password")], "Mật khẩu xác nhận không đúng!"),
 });
 const SignUp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
@@ -35,13 +43,28 @@ const SignUp = () => {
   const handleSignUp = async (values) => {
     console.log(values);
     if (!isValid) return;
-    else {
-      Swal.fire({
-        text: "Tạo tài khoản thành công",
-        icon: "success",
-      });
 
-      navigate("/");
+    try {
+      const action = register(values);
+      console.log(action);
+      const resultAction = await dispatch(action);
+      const data = unwrapResult(resultAction);
+      console.log("new user", data);
+      if (data.status === "fail") {
+        Swal.fire({
+          text: data.message,
+          icon: "error",
+        });
+      } else {
+        Swal.fire({
+          text: "Tạo tài khoản thành công",
+          icon: "success",
+        });
+
+        navigate("/");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   useEffect(() => {
@@ -72,8 +95,8 @@ const SignUp = () => {
               <Field>
                 <Input
                   type="text"
-                  name="username"
-                  placeholder="Tài khoản"
+                  name="fullName"
+                  placeholder="Họ và tên"
                   control={control}
                 />
               </Field>
@@ -90,6 +113,14 @@ const SignUp = () => {
                   type="password"
                   name="password"
                   placeholder="Mật khẩu"
+                  control={control}
+                />
+              </Field>
+              <Field>
+                <Input
+                  type="password"
+                  name="passwordConfirm"
+                  placeholder="Xác nhận mật khẩu"
                   control={control}
                 />
               </Field>

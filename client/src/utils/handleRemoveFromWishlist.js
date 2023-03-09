@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { removeFromWishlist } from "../redux-toolkit/wishlistSlice/wishlistSlice";
+import { removeFromWishlist } from "../store/wishlistSlice/wishlistSlice";
 
 function handleRemoveFromWishlist(productNeedRemove, dispatch) {
   Swal.fire({

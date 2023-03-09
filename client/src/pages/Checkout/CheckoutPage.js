@@ -8,12 +8,12 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { removeAllProduct } from "../../redux-toolkit/cartSlice/cartSlice";
+import { removeAllProduct } from "../../store/cartSlice/cartSlice";
 import Swal from "sweetalert2";
 import axios from "axios";
 import styled from "styled-components";
 import { MenuItem, Select } from "@mui/material";
-import { cartItemsTotalSelector } from "../../redux-toolkit/cartSlice/Selector";
+import { cartItemsTotalSelector } from "../../store/cartSlice/Selector";
 import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
 const schema = yup.object({
   fullname: yup.string().required("Vui lòng nhập họ tên!"),

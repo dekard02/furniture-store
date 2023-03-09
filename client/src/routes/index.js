@@ -4,6 +4,7 @@ import CartPage from "../pages/CartPage/CartPage";
 import CheckoutPage from "../pages/Checkout/CheckoutPage";
 import CheckoutSuccess from "../pages/Checkout/CheckoutSuccess";
 import Home from "../pages/Home/Home";
+import Order from "../pages/Order/Order";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import Products from "../pages/Products/Products";
 import SignIn from "../pages/SignIn/SignIn";
@@ -28,7 +29,7 @@ export const publicRoutes = [
     component: CartPage,
   },
   {
-    path: "/products/:id",
+    path: "/products/:slug",
     component: ProductDetail,
   },
   {
@@ -46,6 +47,14 @@ export const publicRoutes = [
   {
     path: "/sign-up",
     component: SignUp,
+  },
+  {
+    path: "/sign-in",
+    component: SignIn,
+  },
+  {
+    path: "/order",
+    component: Order,
   },
   {
     path: "/admin",
