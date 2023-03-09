@@ -5,7 +5,7 @@ import "tippy.js/dist/tippy.css";
 import { useDispatch, useSelector } from "react-redux";
 import handleAddToCart from "../../utils/handleAddToCart";
 import { useNavigate } from "react-router-dom";
-import { setShowModalQuickView } from "../../redux-toolkit/global/globalSlice";
+import { setShowModalQuickView } from "../../store/global/globalSlice";
 import handleAddToWishlist from "../../utils/handleAddToWishlist";
 const ProductItem = ({ item = {} }) => {
   const { wishlists } = useSelector((state) => state.wishlist);
@@ -19,7 +19,7 @@ const ProductItem = ({ item = {} }) => {
     <StyledProductItem className={`product-item fex flex-col relative`}>
       <div className="relative product-thumbnail">
         <div
-          onClick={() => navigate(`/products/${item._id}`)}
+          onClick={() => navigate(`/products/${item.slug}`)}
           className="relative h-[250px] flex-shrink-0 overflow-hidden cursor-pointer product-image"
         >
           {item && item.images ? (
@@ -79,7 +79,7 @@ const ProductItem = ({ item = {} }) => {
           </h3>
           <div className="flex items-center justify-center w-full product-item-price gap-x-3">
             <span className="text-lg font-medium text-bgPrimary">
-              {item.price}
+              {item.price.toLocaleString()}
             </span>
             <span className="text-lg font-medium text-gray-500 line-through">
               $250.00

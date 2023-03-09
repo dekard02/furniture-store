@@ -8,31 +8,25 @@ import InstagramSection from "../../components/InstagramSection/InstagramSection
 import Populars from "../../components/Populars/Populars";
 import Testimonial from "../../components/Testimonial/Testimonial";
 import WoodenFurniture from "../../components/WoodenFurniture/WoodenFurniture";
+import productApi from "../../service/productApi";
 
 const Home = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     document.title = "Trang Chủ";
-    async function fetchProductsData() {
-      try {
-        const res = await axios.get(`http://localhost:8000/api/v1/products`);
-        if (res && res.data) {
-          setData(res.data);
-          console.log(res.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchProductsData();
+    const fetchProducts = async () => {
+      const res = await productApi.getAllProduct();
+      setData(res.products);
+    };
+    fetchProducts();
   }, []);
   return (
     <div className="overflow-hidden home">
       <Banner />
       <div className="wrapper-layout">
         <BannerSection />
-        <Populars data={data.products} />
-        <WoodenFurniture data={data.products} />
+        <Populars data={data} />
+        <WoodenFurniture data={data} />
         <BannerVideo />
         <Testimonial />
       </div>

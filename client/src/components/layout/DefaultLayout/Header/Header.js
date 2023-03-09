@@ -2,10 +2,12 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import logo from "../../../../assets/logobrand.webp";
 import { useDispatch, useSelector } from "react-redux";
-import { setScrollValue } from "../../../../redux-toolkit/global/globalSlice";
+import { setScrollValue } from "../../../../store/global/globalSlice";
 import { NavLink } from "react-router-dom";
 import MenuItem from "../Navbar/MenuItem";
-import { cartItemsCountSelector } from "../../../../redux-toolkit/cartSlice/Selector";
+import { cartItemsCountSelector } from "../../../../store/cartSlice/Selector";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
+import { BiLogInCircle } from "react-icons/bi";
 const Header = () => {
   const { scrollValid } = useSelector((state) => state.global);
   const { wishlists } = useSelector((state) => state.wishlist);
@@ -23,7 +25,9 @@ const Header = () => {
     };
   }, []);
   return (
-    <StyledHeader className={`header ${scrollValid ? "active" : ""}`}>
+    <StyledHeader
+      className={`header z-[500] relative ${scrollValid ? "active" : ""}`}
+    >
       <div className="relative flex items-center justify-between">
         <NavLink to="/" className="w-16 cursor-pointer header-logo">
           <img src={logo} alt="" />
@@ -34,11 +38,31 @@ const Header = () => {
           <MenuItem title="About" to={"/about"} />
         </div>
         <div className="flex items-center header-right gap-x-4">
-          <div className="text-2xl text-textPrimary">
-            <i className="transition-all cursor-pointer bi text-textPrimary hover:text-bgPrimary bi-search"></i>
-          </div>
-          <div className="text-2xl text-textPrimary">
+          <div className="text-2xl icon-user relative text-textPrimary">
             <i className="transition-all cursor-pointer bi text-textPrimary hover:text-bgPrimary bi-person"></i>
+            <div className="absolute w-44 select-none hidden shadow-lg border border-gray-200 -left-[153px] py-3 popup-user flex-col rounded-md bg-white">
+              <NavLink
+                to={"/sign-in"}
+                className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
+              >
+                {/* <i className="bi text-textPrimary text-lg bi-person-check-fill"></i> */}
+                <FiLogIn className="text-lg font-medium text-textPrimary" />
+
+                <span className="text-textPrimary whitespace-nowrap font-medium text-sm">
+                  Đăng nhập
+                </span>
+              </NavLink>
+              <NavLink
+                to={"/sign-up"}
+                className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
+              >
+                {/* <FiLogOut className="text-lg font-medium text-textPrimary" /> */}
+                <BiLogInCircle className="text-lg font-medium text-textPrimary" />
+                <span className="text-textPrimary font-medium text-sm">
+                  Đăng kí
+                </span>
+              </NavLink>
+            </div>
           </div>
           <NavLink
             to={"/wishlist"}
@@ -79,5 +103,10 @@ const StyledHeader = styled.div`
   }
   .menu-item.active {
     color: #f51c1c;
+  }
+  .icon-user {
+    &:hover .popup-user {
+      display: flex;
+    }
   }
 `;

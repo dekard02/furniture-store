@@ -10,20 +10,20 @@ import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { login, register } from "../../store/auth/userSlice";
+import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const schemaValidate = yup.object({
-  username: yup.string().required("Vui lòng nhập tên tài khoản"),
   email: yup
     .string()
     .email("Vui lòng nhập email hợp lệ!")
     .required("Vui lòng nhập địa chỉ email"),
-  password: yup
-    .string()
-    .min(8, "Vui lòng nhập mật khẩu ít nhất 8 kí tự!")
-    .required("Vui lòng nhập mật khẩu!"),
+  password: yup.string().required("Vui lòng nhập mật khẩu!"),
 });
 const SignIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
@@ -35,6 +35,20 @@ const SignIn = () => {
   const handleSignIn = async (values) => {
     console.log(values);
     if (!isValid) return;
+    try {
+      const action = login(values);
+      const resultAction = await dispatch(action);
+      const data = unwrapResult(resultAction);
+      console.log(" user loged", data);
+      Swal.fire({
+        text: "Đăng nhập thành công",
+        icon: "success",
+      });
+
+      // navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
     const arrErroes = Object.values(errors);
@@ -61,14 +75,6 @@ const SignIn = () => {
               onSubmit={handleSubmit(handleSignIn)}
               className="flex flex-col mt-4"
             >
-              <Field>
-                <Input
-                  type="text"
-                  name="username"
-                  placeholder="Tài khoản"
-                  control={control}
-                />
-              </Field>
               <Field>
                 <Input
                   type="email"

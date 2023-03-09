@@ -11,23 +11,7 @@ const Populars = ({ data = [] }) => {
     <StyledPopular className="section-populars">
       <div className="pb-12">
         <h4 className="section-title">Most Popular Items</h4>
-        <div className="products-tab mb-9 flex justify-center items-center gap-x-4">
-          <div className="tab-item text-secondary text-2xl font-medium px-4 border border-bgPrimary flex justify-center items-center cursor-pointer">
-            Chair
-          </div>
-          <div className="tab-item text-secondary text-2xl font-medium px-4 border-none  flex justify-center items-center cursor-pointer">
-            Sofa
-          </div>
-          <div className="tab-item text-secondary text-2xl font-medium px-4 border-none  flex justify-center items-center cursor-pointer">
-            Lamp
-          </div>
-          <div className="tab-item text-secondary text-2xl font-medium px-4 border-none  flex justify-center items-center cursor-pointer">
-            Table
-          </div>
-          <div className="tab-item text-secondary text-2xl font-medium px-4 border-none  flex justify-center items-center cursor-pointer">
-            Monitor
-          </div>
-        </div>
+
         <div className="grid gap-y-5 grid-cols-5 gap-x-7">
           {data.length > 0 &&
             data.map((product, index) => {

@@ -7,19 +7,19 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
 
-  console.log(id);
   const [product, setProduct] = useState({});
+
   useEffect(() => {
     document.title = "Trang Chủ";
     async function fetchProductsData() {
       try {
         const res = await axios.get(
-          `http://localhost:8000/api/v1/products/${id}`
+          `http://localhost:8000/api/v1/products?slug=${slug}`
         );
         if (res && res.data) {
-          setProduct(res.data.product);
+          setProduct(res.data.products[0]);
           console.log("product", product);
         }
         console.log(res);
@@ -29,7 +29,6 @@ const ProductDetail = () => {
     }
     fetchProductsData();
   }, []);
-  const dispatch = useDispatch();
   return (
     <StyledProductDetail className="product-detail-page">
       <BreadCrumb heading="Product Detail" title="Home - Details" />

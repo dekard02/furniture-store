@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ReactDOM from "react-dom";
 import ReactPlayer from "react-player/youtube";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlayVideo } from "../../../../redux-toolkit/global/globalSlice";
+import { setPlayVideo } from "../../../../store/global/globalSlice";
 const VideoModal = () => {
   const { playVideo } = useSelector((state) => state.global);
   const dispatch = useDispatch();

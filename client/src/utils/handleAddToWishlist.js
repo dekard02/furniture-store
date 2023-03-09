@@ -1,4 +1,4 @@
-import { addToWishlist } from "../redux-toolkit/wishlistSlice/wishlistSlice";
+import { addToWishlist } from "../store/wishlistSlice/wishlistSlice";
 
 function handleAddToWishlist(product, dispatch) {
   dispatch(addToWishlist(product));

@@ -9,7 +9,6 @@ import {
   SecureIcon,
   Shipping,
 } from "./icons/IconShipping";
-import { setPlayVideo } from "../../redux-toolkit/global/globalSlice";
 import ButtonPlay from "./ButtonPlay/ButtonPlay";
 const BannerVideo = () => {
   const dispatch = useDispatch();
@@ -19,7 +18,7 @@ const BannerVideo = () => {
         <div className="relative overflow-hidden rounded-lg">
           <img className="rounded-lg" src={bannerVideo} alt="" />
           <div className="center">
-          <ButtonPlay />
+            <ButtonPlay />
           </div>
         </div>
         <div className="max-w-[750px] grid grid-cols-4 gap-x-4 justify-center section-shipping mx-auto bg-white rounded-lg px-10 py-8">
@@ -61,12 +60,12 @@ const BannerVideo = () => {
 export default BannerVideo;
 const StyledBannerVideo = styled.div`
   position: relative;
- 
+
   .section-shipping {
     -webkit-box-shadow: 0 8px 18px rgb(70 70 70 / 16%);
     box-shadow: 0 8px 18px rgb(70 70 70 / 16%);
   }
-  
+
   .shipping-item::after {
     position: absolute;
     content: "";
