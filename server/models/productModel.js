@@ -1,7 +1,7 @@
-const rootUrl = process.env.ROOT_URL || '/';
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const AppError = require('../errors/AppError');
+const { getImageUrl } = require('../utils/image');
 
 const productSchema = new mongoose.Schema(
   {
@@ -68,8 +68,8 @@ const productSchema = new mongoose.Schema(
     id: false,
     timestamps: true,
     versionKey: false,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: { virtuals: true, getters: true },
+    toObject: { virtuals: true, getters: true },
   }
 );
 
@@ -88,34 +88,9 @@ productSchema.path('name').validate(async function (value) {
   return true;
 }, 'Tên sản phẩm này đã tồn tại');
 
-productSchema.pre(/^find/, function (next) {
-  this.projection({
-    name: 1,
-    slug: 1,
-    description: 1,
-    price: 1,
-    inStock: 1,
-    ratingsAverage: 1,
-    ratingsQuantity: 1,
-    isDeleted: 1,
-    images: {
-      $map: {
-        input: '$images',
-        as: 'image',
-        in: {
-          $cond: {
-            if: { $regexMatch: { input: '$$image', regex: 'http' } },
-            then: '$$image',
-            else: { $concat: [rootUrl, '/', '$$image'] },
-          },
-        },
-      },
-    },
-    createdAt: 1,
-    updatedAt: 1,
-  });
-  next();
-});
+productSchema
+  .path('images')
+  .get((images) => images.map((img) => getImageUrl(img)));
 
 productSchema.pre(/(u|U)pdate/, async function (next) {
   const { _id } = this.getQuery();
