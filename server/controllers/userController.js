@@ -1,7 +1,7 @@
 const multer = require('multer');
 const asyncHandler = require('../errors/asyncHandler');
 const { filterObject } = require('../utils/objectUtils');
-const saveImage = require('../utils/saveImage');
+const { saveImage } = require('../utils/image');
 const User = require('../models/userModel');
 const APIFeatures = require('../utils/APIFeature');
 const AppError = require('../errors/AppError');
@@ -34,7 +34,6 @@ const saveUserImage = async (file, userId) => {
 
 exports.me = asyncHandler(async (req, res, next) => {
   const profile = await User.findById(req.user.get('_id'));
-  profile.password = undefined;
 
   res.status(200).json({
     status: 'success',
@@ -59,7 +58,6 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
     runValidators: true,
     new: true,
   });
-  user.password = undefined;
 
   return res.status(200).json({
     status: 'success',
@@ -80,10 +78,7 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     status: 'success',
     page: features.page,
-    users: users.map((user) => {
-      user.password = undefined;
-      return user;
-    }),
+    users: users,
   });
 });
 
@@ -91,7 +86,6 @@ exports.getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) throw new AppError('Không tìm thấy người dùng với id này', 400);
-  user.password = undefined;
 
   return res.status(200).json({
     status: 'success',
@@ -115,7 +109,6 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     runValidators: true,
     new: true,
   });
-  user.password = undefined;
 
   return res.status(200).json({
     status: 'success',

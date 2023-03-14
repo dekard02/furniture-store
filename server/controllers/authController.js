@@ -64,7 +64,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     throw new AppError('Nhập email và mật khẩu', 400);
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('password');
   if (!user || !(await user.checkPassword(password, user.password))) {
     throw new AppError('Mật khẩu hoặc email không đúng!', 401);
   }
