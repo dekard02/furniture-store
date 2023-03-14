@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', auth.protect, orderController.getAllOrders);
 router.get('/:id', auth.protect, orderController.getOrder);
-router.post('/', auth.protect, orderController.createOrder);
+router.post('/', orderController.createOrder);
 
 router.put(
   '/:id',
