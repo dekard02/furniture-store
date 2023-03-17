@@ -75,7 +75,7 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({ slug: 1 });
 productSchema.index({ price: 1 });
-productSchema.index({ '$**': 'text' });
+productSchema.index({ name: 'text' });
 
 productSchema.path('name').validate(async function (value) {
   if (this.isNew) {
