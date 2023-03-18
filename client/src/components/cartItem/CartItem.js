@@ -13,7 +13,6 @@ const CartItem = ({ item = {}, isWishList = false }) => {
   const dispatch = useDispatch();
 
   const { _id, images, name, price, quantity } = item;
-  console.log(item);
   const handleRemoveFromCart = (productNeedRemove) => {
     Swal.fire({
       text: "Bạn muốn xóa sản phẩm này khỏi giỏ hàng?",

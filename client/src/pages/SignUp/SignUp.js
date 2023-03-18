@@ -41,15 +41,12 @@ const SignUp = () => {
     resolver: yupResolver(schemaValidate),
   });
   const handleSignUp = async (values) => {
-    console.log(values);
     if (!isValid) return;
 
     try {
       const action = register(values);
-      console.log(action);
       const resultAction = await dispatch(action);
       const data = unwrapResult(resultAction);
-      console.log("new user", data);
       if (data.status === "fail") {
         Swal.fire({
           text: data.message,

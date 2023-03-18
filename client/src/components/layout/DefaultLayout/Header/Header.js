@@ -6,11 +6,15 @@ import { setScrollValue } from "../../../../store/global/globalSlice";
 import { NavLink } from "react-router-dom";
 import MenuItem from "../Navbar/MenuItem";
 import { cartItemsCountSelector } from "../../../../store/cartSlice/Selector";
-import { FiLogIn, FiLogOut } from "react-icons/fi";
-import { BiLogInCircle } from "react-icons/bi";
+import { FiLogIn } from "react-icons/fi";
+import { BiLogInCircle, BiLogOutCircle } from "react-icons/bi";
+import { setLogout } from "../../../../store/auth/userSlice";
+import Swal from "sweetalert2";
+
 const Header = () => {
   const { scrollValid } = useSelector((state) => state.global);
   const { wishlists } = useSelector((state) => state.wishlist);
+  const { currentUser } = useSelector((state) => state.user);
   const cartItemCount = useSelector(cartItemsCountSelector);
   const dispatch = useDispatch();
 
@@ -23,7 +27,15 @@ const Header = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleLogOut = () => {
+    dispatch(setLogout());
+    Swal.fire({
+      text: "Đăng xuất thành công",
+      icon: "success",
+    });
+  };
   return (
     <StyledHeader
       className={`header z-[500] relative ${scrollValid ? "active" : ""}`}
@@ -41,27 +53,54 @@ const Header = () => {
           <div className="text-2xl icon-user relative text-textPrimary">
             <i className="transition-all cursor-pointer bi text-textPrimary hover:text-bgPrimary bi-person"></i>
             <div className="absolute w-44 select-none hidden shadow-lg border border-gray-200 -left-[153px] py-3 popup-user flex-col rounded-md bg-white">
-              <NavLink
-                to={"/sign-in"}
-                className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
-              >
-                {/* <i className="bi text-textPrimary text-lg bi-person-check-fill"></i> */}
-                <FiLogIn className="text-lg font-medium text-textPrimary" />
+              {!currentUser.email && (
+                <NavLink
+                  to={"/sign-in"}
+                  className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
+                >
+                  <FiLogIn className="text-lg font-medium text-textPrimary" />
 
-                <span className="text-textPrimary whitespace-nowrap font-medium text-sm">
-                  Đăng nhập
-                </span>
-              </NavLink>
-              <NavLink
-                to={"/sign-up"}
-                className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
-              >
-                {/* <FiLogOut className="text-lg font-medium text-textPrimary" /> */}
-                <BiLogInCircle className="text-lg font-medium text-textPrimary" />
-                <span className="text-textPrimary font-medium text-sm">
-                  Đăng kí
-                </span>
-              </NavLink>
+                  <span className="text-textPrimary whitespace-nowrap font-medium text-sm">
+                    Đăng nhập
+                  </span>
+                </NavLink>
+              )}
+              {currentUser.email && (
+                <NavLink
+                  to={"/sign-in"}
+                  className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
+                >
+                  <i className="bi text-textPrimary text-lg bi-person-check-fill"></i>
+
+                  <span className="text-textPrimary capitalize whitespace-nowrap font-medium text-sm">
+                    {currentUser.fullName}
+                  </span>
+                </NavLink>
+              )}
+              {!currentUser.email && (
+                <NavLink
+                  to={"/sign-up"}
+                  className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
+                >
+                  {/* <FiLogOut className="text-lg font-medium text-textPrimary" /> */}
+                  <BiLogInCircle className="text-lg font-medium text-textPrimary" />
+                  <span className="text-textPrimary font-medium text-sm">
+                    Đăng kí
+                  </span>
+                </NavLink>
+              )}
+              {currentUser.email && (
+                <div
+                  onClick={handleLogOut}
+                  className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
+                >
+                  {/* <FiLogOut className="text-lg font-medium text-textPrimary" /> */}
+                  <BiLogOutCircle className="text-lg font-medium text-textPrimary" />
+                  <span className="text-textPrimary font-medium text-sm">
+                    Đăng xuất
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <NavLink

@@ -33,13 +33,12 @@ const SignIn = () => {
     resolver: yupResolver(schemaValidate),
   });
   const handleSignIn = async (values) => {
-    console.log(values);
     if (!isValid) return;
     try {
       const action = login(values);
       const resultAction = await dispatch(action);
       const data = unwrapResult(resultAction);
-      console.log(" user loged", data);
+      console.log(data);
       Swal.fire({
         text: "Đăng nhập thành công",
         icon: "success",

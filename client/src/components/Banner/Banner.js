@@ -4,13 +4,8 @@ import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import BannerItem from "./BannerItem";
-import slide1 from "../../assets/slide1.webp";
-import slide2 from "../../assets/banner2.webp";
+import { bannerData } from "./data/Bannerdata";
 
-const banners = [
-  { id: 1, thumbnail: slide1 },
-  { id: 2, thumbnail: slide2 },
-];
 const Banner = () => {
   SwiperCore.use([Autoplay]);
   return (
@@ -23,7 +18,7 @@ const Banner = () => {
         speed={600}
         autoplay={{ delay: 3000 }}
       >
-        {banners.map((item, index) => {
+        {bannerData.map((item, index) => {
           return (
             <SwiperSlide key={item.id}>
               {({ isActive }) => (

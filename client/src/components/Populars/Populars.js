@@ -5,19 +5,25 @@ import order2 from "../../assets/order2.webp";
 import order3 from "../../assets/order3.webp";
 import { NavLink } from "react-router-dom";
 import ProductItem from "../ProductItem/ProductItem";
-import { ProductsData } from "../data/ProductData";
+import { useSelector } from "react-redux";
+import LoadingSkeleton from "../../components/Loading/LoadingSkeleton";
 const Populars = ({ data = [] }) => {
+  const { loading } = useSelector((state) => state.global);
   return (
     <StyledPopular className="section-populars">
       <div className="pb-12">
         <h4 className="section-title">Most Popular Items</h4>
 
-        <div className="grid gap-y-5 grid-cols-5 gap-x-7">
-          {data.length > 0 &&
-            data.map((product, index) => {
-              return <ProductItem key={product._id} item={product} />;
-            })}
-        </div>
+        {!loading ? (
+          <LoadingSkeleton />
+        ) : (
+          <div className="grid gap-y-5 grid-cols-5 gap-x-7">
+            {data.length > 0 &&
+              data.map((product, index) => {
+                return <ProductItem key={product._id} item={product} />;
+              })}
+          </div>
+        )}
       </div>
       <div className="grid pb-20 grid-cols-3 gap-x-7">
         <NavLink to={"/products"} className="order-item relative">

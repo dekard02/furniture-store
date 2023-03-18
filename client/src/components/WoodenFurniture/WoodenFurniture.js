@@ -5,9 +5,11 @@ import ProductItem from "../ProductItem/ProductItem";
 import dealbanner from "../../assets/dealbanner.webp";
 import Button from "../Button/Button";
 import { useNavigate } from "react-router-dom";
-import { ProductsData } from "../data/ProductData";
+import { useSelector } from "react-redux";
+import LoadingSkeleton from "../Loading/LoadingSkeleton";
 const WoodenFurniture = ({ data = [] }) => {
   const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.global);
   return (
     <StyledWoodenFurniture className="relative flex gap-x-6">
       <div className="w-[70%]">
@@ -19,12 +21,16 @@ const WoodenFurniture = ({ data = [] }) => {
             <img src={shape} alt="" />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-x-5 gap-y-4">
-          {data.length > 0 &&
-            data.map((item, index) => {
-              return <ProductItem item={item} key={item._id} />;
-            })}
-        </div>
+        {!loading ? (
+          <LoadingSkeleton columns={3} length={6} />
+        ) : (
+          <div className="grid grid-cols-3 gap-x-5 gap-y-4">
+            {data.length > 0 &&
+              data.map((item, index) => {
+                return <ProductItem item={item} key={item._id} />;
+              })}
+          </div>
+        )}
       </div>
       <div className="flex-1">
         <div className="deals__banner--thumbnail parent-image">

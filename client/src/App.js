@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { DefaultLayout } from "./components/layout";
 import { publicRoutes } from "./routes";
 import { GlobalStyles } from "./styles/GlobalStyles";
+import ErrorPage from "./pages/Error/ErrorPage";
 function App() {
   return (
     <Fragment>
@@ -24,6 +25,7 @@ function App() {
             ></Route>
           );
         })}
+        <Route path="*" element={<ErrorPage />}></Route>
       </Routes>
     </Fragment>
   );
