@@ -15,15 +15,17 @@ import styled from "styled-components";
 import { MenuItem, Select } from "@mui/material";
 import { cartItemsTotalSelector } from "../../store/cartSlice/Selector";
 import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
+import { provineApi } from "../../service/provineApi";
+import orderApi from "../../service/orderApi";
 const schema = yup.object({
-  fullname: yup.string().required("Vui lòng nhập họ tên!"),
+  fullName: yup.string().required("Vui lòng nhập họ tên!"),
   email: yup
     .string()
     .email("Vui lòng nhập địa chỉ email hợp lệ!")
     .required("Vui lòng nhập địa chỉ email!"),
-  phonenumber: yup
+  phoneNumber: yup
     .string()
-    .matches(/^\d{10}$/, "Vui lòng nhập số điện thoại hợp lệ!"),
+    .matches(/^\d{10,11}$/, "Vui lòng nhập số điện thoại hợp lệ!"),
   address: yup.string().required("Vui lòng nhập số nhà tên đường!"),
   cityAddress: yup.string().required("Vui lòng chọn tỉnh thành!"),
   districtAddress: yup.string().required("Vui lòng chọn quận huyện!"),
@@ -36,7 +38,7 @@ const CheckoutPage = () => {
   const [districts, setDistricts] = useState([]);
   const { cartItems } = useSelector((state) => state.cart);
   const cartItemsTotal = useSelector(cartItemsTotalSelector);
-  const priceShipping = 35000;
+  const priceShipping = 150000;
   const {
     control,
     handleSubmit,
@@ -46,34 +48,56 @@ const CheckoutPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  console.log(register);
   const handleChooseCity = (e, item) => {
     setDistricts(item.districts);
   };
 
   const handleCheckout = async (values) => {
-    console.log(values);
     if (!isValid) {
       return;
-    } else {
-      Swal.fire({
-        text: "Đặt hàng thành công",
-        icon: "success",
-      });
-      dispatch(removeAllProduct([]));
-      navigate("/checkout-success");
+    }
+    let productOrders = cartItems?.map((item) => {
+      return {
+        product: item._id,
+        amount: item.quantity,
+      };
+    });
+    let order = {
+      fullName: values.fullName,
+      phoneNumber: values.phoneNumber,
+      address: `${
+        values.address + "," + values.cityAddress + "," + values.districtAddress
+      }`,
+      products: [...productOrders],
+    };
+    try {
+      const res = await orderApi.createOrder(order);
+      if (res.status !== "success") {
+        Swal.fire({
+          text: res.errors.amount,
+          icon: "error",
+        });
+      } else {
+        console.log(res);
+        Swal.fire({
+          text: "Đặt hàng thành công",
+          icon: "success",
+        });
+        dispatch(removeAllProduct([]));
+        navigate("/checkout-success");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   useEffect(() => {
     async function fetchProvinces() {
       try {
-        const response = await axios.get(
-          `https://provinces.open-api.vn/api/?depth=2`
-        );
+        const response = await axios.get(provineApi.getAllProvine());
+        console.log(response);
         if (response.data) {
           setProvinces(response.data);
-          // console.log(response.data);
         }
       } catch (error) {
         console.log(error);
@@ -84,7 +108,6 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const arrErroes = Object.values(errors);
-    console.log(arrErroes);
     if (arrErroes.length > 0) {
       toast.error(arrErroes[0]?.message, {
         pauseOnHover: false,
@@ -121,7 +144,7 @@ const CheckoutPage = () => {
             <Field>
               <Input
                 type="text"
-                name="fullname"
+                name="fullName"
                 placeholder="Họ và tên"
                 control={control}
               />
@@ -138,7 +161,7 @@ const CheckoutPage = () => {
               <Field>
                 <Input
                   type="number"
-                  name="phonenumber"
+                  name="phoneNumber"
                   placeholder="Số điện thoại"
                   control={control}
                 />

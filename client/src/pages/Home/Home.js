@@ -1,6 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Banner from "../../components/Banner/Banner";
 import BannerSection from "../../components/BannerSection/BannerSection";
 import BannerVideo from "../../components/BannerVideo/BannerVideo";
@@ -9,14 +8,25 @@ import Populars from "../../components/Populars/Populars";
 import Testimonial from "../../components/Testimonial/Testimonial";
 import WoodenFurniture from "../../components/WoodenFurniture/WoodenFurniture";
 import productApi from "../../service/productApi";
+import { setLoadingSkeleton } from "../../store/global/globalSlice";
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.user);
+  console.log(token);
   useEffect(() => {
     document.title = "Trang Chủ";
     const fetchProducts = async () => {
-      const res = await productApi.getAllProduct();
-      setData(res.products);
+      try {
+        dispatch(setLoadingSkeleton(true));
+        const res = await productApi.getAllProduct();
+        setData(res.products);
+        dispatch(setLoadingSkeleton(false));
+      } catch (error) {
+        console.log(error);
+        dispatch(setLoadingSkeleton(false));
+      }
     };
     fetchProducts();
   }, []);

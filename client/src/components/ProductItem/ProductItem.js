@@ -81,9 +81,6 @@ const ProductItem = ({ item = {} }) => {
             <span className="text-lg font-medium text-bgPrimary">
               {item.price.toLocaleString()}
             </span>
-            <span className="text-lg font-medium text-gray-500 line-through">
-              $250.00
-            </span>
           </div>
         </div>
         <button

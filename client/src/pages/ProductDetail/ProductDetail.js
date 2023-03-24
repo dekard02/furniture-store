@@ -5,29 +5,22 @@ import ProductDetailItem from "../../components/ProductDetailItem/ProductDetailI
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import productApi from "../../service/productApi";
 
 const ProductDetail = () => {
   const { slug } = useParams();
-
-  const [product, setProduct] = useState({});
-
+  const [product, setProduct] = useState([]);
   useEffect(() => {
-    document.title = "Trang Chủ";
-    async function fetchProductsData() {
+    document.title = "Sản phẩm chi tiết";
+    const fetchProducts = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8000/api/v1/products?slug=${slug}`
-        );
-        if (res && res.data) {
-          setProduct(res.data.products[0]);
-          console.log("product", product);
-        }
-        console.log(res);
+        const res = await productApi.getProduct(slug);
+        setProduct(res.products[0]);
       } catch (error) {
         console.log(error);
       }
-    }
-    fetchProductsData();
+    };
+    fetchProducts();
   }, []);
   return (
     <StyledProductDetail className="product-detail-page">

@@ -1,11 +1,12 @@
 import React from "react";
-import breadcrumbbg from "../../assets/breadcrumbbg.webp";
+import breadcrumbbg1 from "../../assets/breadcrumb1.jpg";
+import breadcrumbbg2 from "../../assets/breadcrumbbg2.jpg";
 const BreadCrumb = ({ heading = "", title = "" }) => {
   return (
     <div className="py-7 bg-white border-t border-gray-300">
       <div
         style={{
-          backgroundImage: `url(${breadcrumbbg})`,
+          backgroundImage: `url(${breadcrumbbg2})`,
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "scroll",
           backgroundPosition: "center center",

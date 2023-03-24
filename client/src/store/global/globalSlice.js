@@ -5,6 +5,7 @@ const initialState = {
   playVideo: false,
   showModalQuickView: false,
   selectedProduct: {},
+  loading: false,
 };
 
 export const globalSlice = createSlice({
@@ -25,6 +26,9 @@ export const globalSlice = createSlice({
       state.showModalQuickView = false;
       state.selectedProduct = {};
     },
+    setLoadingSkeleton: (state, action) => {
+      state.loading = action.payload;
+    },
   },
 });
 
@@ -33,6 +37,7 @@ export const {
   setPlayVideo,
   setShowModalQuickView,
   setCloseModalQuickView,
+  setLoadingSkeleton,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

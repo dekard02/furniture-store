@@ -33,19 +33,24 @@ const SignIn = () => {
     resolver: yupResolver(schemaValidate),
   });
   const handleSignIn = async (values) => {
-    console.log(values);
     if (!isValid) return;
     try {
       const action = login(values);
       const resultAction = await dispatch(action);
       const data = unwrapResult(resultAction);
-      console.log(" user loged", data);
-      Swal.fire({
-        text: "Đăng nhập thành công",
-        icon: "success",
-      });
-
-      // navigate("/");
+      console.log(data);
+      if (data.status !== "success") {
+        Swal.fire({
+          text: data.message,
+          icon: "error",
+        });
+      } else {
+        Swal.fire({
+          text: "Đăng nhập thành công",
+          icon: "success",
+        });
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }
