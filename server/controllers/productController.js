@@ -29,7 +29,7 @@ exports.getAllProduct = asyncHandler(async (req, res, next) => {
 });
 
 exports.getProduct = asyncHandler(async (req, res, next) => {
-  const product = await Product.findById(req.params.id).populate('reviews');
+  const product = await Product.findById(req.params.id);
 
   if (!product) throw new AppError('Không tìm thấy sản phẩm với id này', 404);
 

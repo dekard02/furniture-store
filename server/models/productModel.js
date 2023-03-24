@@ -120,12 +120,6 @@ productSchema.pre(/^find/, function (next) {
   next();
 });
 
-productSchema.virtual('reviews', {
-  ref: 'Review',
-  foreignField: 'product',
-  localField: '_id',
-});
-
 productSchema.methods.didUserBuy = async function (productId, userId) {
   const purchasedProduct = await mongoose.models.Order.aggregate([
     {
@@ -148,15 +142,6 @@ productSchema.methods.didUserBuy = async function (productId, userId) {
   ]);
 
   return purchasedProduct.length !== 0;
-};
-
-productSchema.methods.didUserReview = async function (productId, userId) {
-  const review = mongoose.models.Review.findOne({
-    user: userId,
-    product: productId,
-  });
-
-  return !review;
 };
 
 const Product = mongoose.model('Product', productSchema);
