@@ -144,15 +144,6 @@ productSchema.methods.didUserBuy = async function (productId, userId) {
   return purchasedProduct.length !== 0;
 };
 
-productSchema.methods.didUserReview = async function (productId, userId) {
-  const review = mongoose.models.Review.findOne({
-    user: userId,
-    product: productId,
-  });
-
-  return !review;
-};
-
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
