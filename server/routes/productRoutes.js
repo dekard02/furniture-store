@@ -1,7 +1,6 @@
 const express = require('express');
 const productController = require('../controllers/productController');
 const auth = require('../middlewares/auth');
-const reviewRouter = require('./reviewRoutes');
 
 const router = express.Router();
 
@@ -24,7 +23,5 @@ router.put(
 );
 
 router.delete('/:id', productController.deleteProduct);
-
-router.use('/:productId/reviews', reviewRouter);
 
 module.exports = router;

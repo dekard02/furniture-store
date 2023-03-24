@@ -9,6 +9,7 @@ import Home from "../pages/Home/Home";
 import Order from "../pages/Order/Order";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import Products from "../pages/Products/Products";
+import Profile from "../pages/Profile/Profile";
 import SignIn from "../pages/SignIn/SignIn";
 import SignUp from "../pages/SignUp/SignUp";
 import WishList from "../pages/WishList/WishList";
@@ -57,6 +58,10 @@ export const publicRoutes = [
     {
         path: "/order",
         component: Order,
+    },
+    {
+        path: "/profile",
+        component: Profile,
     },
 ];
 

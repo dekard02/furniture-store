@@ -2,13 +2,17 @@ import axiosClient from "./axiosClient";
 
 const productApi = {
   getAllProduct(params) {
-    const url = "/products";
+    const url = "/products/?inStock[gt]=0";
     return axiosClient.get(url, {
       params: params,
     });
   },
-  getProduct(id) {
-    const url = `/products/${id}`;
+  searchProduct(params) {
+    const url = `/products/?inStock[gt]=0&q=${params}`;
+    return axiosClient.get(url);
+  },
+  getProduct(slug) {
+    const url = `/products/?slug=${slug}`;
     return axiosClient.get(url);
   },
   remove(id) {

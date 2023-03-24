@@ -1,7 +1,7 @@
-const rootUrl = process.env.ROOT_URL || '/';
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const { getImageUrl } = require('../utils/image');
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Mật khẩu không được bỏ trống'],
       minLength: [8, 'Mật khẩu tối thiểu 8 ký tự'],
+      select: false,
     },
     passwordConfirm: {
       type: String,
@@ -58,36 +59,15 @@ const userSchema = new mongoose.Schema(
     id: false,
     timestamps: true,
     versionKey: false,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: { virtuals: true, getters: true },
+    toObject: { virtuals: true, getters: true },
   }
 );
 
 userSchema.index({ email: 1 });
 userSchema.index({ '$**': 'text' });
 
-userSchema.pre(/^find/, function (next) {
-  this.projection({
-    fullName: 1,
-    email: 1,
-    image: {
-      $cond: {
-        if: { $regexMatch: { input: '$image', regex: 'http' } },
-        then: '$image',
-        else: { $concat: [rootUrl, '/', '$image'] },
-      },
-    },
-    passwordChangedAt: 1,
-    password: 1,
-    phoneNumber: 1,
-    address: 1,
-    role: 1,
-    active: 1,
-    createdAt: 1,
-    updatedAt: 1,
-  });
-  next();
-});
+userSchema.path('image').get((value) => getImageUrl(value));
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

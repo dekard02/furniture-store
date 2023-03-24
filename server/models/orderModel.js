@@ -57,7 +57,7 @@ const orderSchema = new mongoose.Schema(
             validate: {
               validator: async function (v) {
                 const product = await mongoose.models.Product.findById(
-                  this.products.product
+                  this.product
                 );
                 return v <= product.inStock;
               },
@@ -100,10 +100,10 @@ orderSchema.pre('save', async function (next) {
   next();
 });
 
-orderSchema.pre(/^find/, async function (next) {
+orderSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'products.product',
-    select: 'name description slug -categories images',
+    select: 'name slug -categories images',
   }).populate({
     path: 'user',
     select: 'fullName email image',

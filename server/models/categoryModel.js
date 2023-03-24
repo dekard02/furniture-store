@@ -35,7 +35,7 @@ const categorySchema = new mongoose.Schema(
 );
 
 categorySchema.index({ slug: 1 });
-categorySchema.index({ '$**': 'text' });
+categorySchema.index({ name: 'text' });
 
 categorySchema.path('name').validate(async function (value) {
   if (this.isNew) {

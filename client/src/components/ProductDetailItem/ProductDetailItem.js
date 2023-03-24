@@ -7,6 +7,7 @@ import Quantity from "../Quantity/Quantity";
 import styled from "styled-components";
 import handleAddToWishlist from "../../utils/handleAddToWishlist";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const ProductDetailItem = ({ item = {}, isQickView = false }) => {
   const { price } = item;
   const [imgPreview, setImgPreview] = useState("");
@@ -17,7 +18,16 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
     setQuantity(quantity + 1);
   };
   const handleDec = () => {
-    setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
+    if (quantity === 1) {
+      Swal.fire({
+        text: "Số lượng tối thiểu phải là 1",
+        icon: "error",
+      });
+      setQuantity(1);
+    } else {
+      setQuantity(quantity - 1);
+    }
+    // setQuantity(quantity - 1 < 1 ? 1 : quantity - 1);
   };
   const handlePreviewProduct = (image) => setImgPreview(image);
   useEffect(() => {
@@ -70,9 +80,6 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
           <span className="text-lg font-medium text-bgPrimary">
             {price?.toLocaleString()}
           </span>
-          <span className="text-lg font-medium text-gray-400 line-through">
-            $320.000
-          </span>
         </div>
         <div className="flex gap-x-1">
           <i className="text-base text-yellow-500 bi bi-star-fill"></i>
@@ -114,18 +121,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
             </Button>
           </div>
         )}
-        {/* <div className="flex items-center gap-x-2">
-          <span className="text-lg font-semibold text-secondary">Barcode:</span>
-          <span className="text-base font-normal text-gray-500">565461</span>
-        </div>
-        <div className="flex items-center gap-x-2">
-          <span className="text-lg font-semibold text-secondary">Sky:</span>
-          <span className="text-base font-normal text-gray-500">4420</span>
-        </div>
-        <div className="flex items-center gap-x-2">
-          <span className="text-lg font-semibold text-secondary">Vendor:</span>
-          <span className="text-base font-normal text-gray-500">Belo</span>
-        </div> */}
+
         <div className="flex items-center gap-x-2">
           <span className="text-lg font-semibold text-secondary">
             Danh mục:

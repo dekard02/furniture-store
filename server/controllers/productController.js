@@ -1,6 +1,6 @@
 const multer = require('multer');
 const asyncHandler = require('../errors/asyncHandler');
-const saveImage = require('../utils/saveImage');
+const { saveImage } = require('../utils/image');
 const { omitFields } = require('../utils/objectUtils');
 const Product = require('../models/productModel');
 const AppError = require('../errors/AppError');

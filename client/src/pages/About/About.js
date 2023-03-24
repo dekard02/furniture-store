@@ -8,7 +8,6 @@ import team3 from "../../assets/team3.webp";
 import team4 from "../../assets/team4.webp";
 import styled from "styled-components";
 import TopClints from "../../components/TopClints/TopClints";
-import NewsLetter from "../../components/layout/DefaultLayout/NewsLetter/NewsLetter";
 import SocialIcon from "./SocialIcon";
 const data = [
   {
@@ -37,6 +36,10 @@ const data = [
   },
 ];
 const About = () => {
+  React.useEffect(() => {
+    document.title = "About";
+  }, []);
+
   return (
     <StyledAbout className="about-page">
       <BreadCrumb heading="About Us" title="Home - About Us" />

@@ -2,8 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import ProductItem from "../../components/ProductItem/ProductItem";
 import Pagination from "@mui/material/Pagination";
-import { ProductsData } from "../data/ProductData";
-const ProductsSection = ({ data = [] }) => {
+import { LoadingSkeleton } from "../Loading";
+import { useSelector } from "react-redux";
+const ProductsSection = ({
+  data = [],
+  pagination = {},
+  handlePageChange,
+  setFilterChange,
+  searchValue,
+}) => {
+  const { loading } = useSelector((state) => state.global);
   return (
     <StyledDiv className="products-section wrapper-layout section">
       <div className="flex gap-x-5 relative">
@@ -22,6 +30,7 @@ const ProductsSection = ({ data = [] }) => {
               </div>
               <div className="search-form flex relative overflow-hidden">
                 <input
+                  onChange={(e) => setFilterChange(e.target.value)}
                   className="text-textPrimary flex-1 border-r-0 text-sm outline-none h-10 border border-gray-400 rounded-sm px-3 focus:border-bgPrimary"
                   type="text"
                   placeholder="Search by"
@@ -98,14 +107,30 @@ const ProductsSection = ({ data = [] }) => {
           </div>
         </div>
         <div className="flex-1 flex flex-col gap-y-4">
-          <div className="grid gap-y-5 grid-cols-3 gap-x-7">
-            {data.length > 0 &&
-              data.map((item, index) => {
-                return <ProductItem key={item._id} item={item} />;
-              })}
-          </div>
+          {loading ? (
+            <LoadingSkeleton columns={3} length={6} />
+          ) : (
+            <div className="grid gap-y-5 grid-cols-3 gap-x-7">
+              {data.length > 0 &&
+                data.map((item, index) => {
+                  return <ProductItem key={item._id} item={item} />;
+                })}
+            </div>
+          )}
+          {data?.length === 0 && searchValue !== "" && (
+            <div className="flex text-xl text-bgPrimary justify-center items-center w-full">
+              Không tìm thấy sản phẩm với tên phù hợp
+            </div>
+          )}
+
           <div className="text-center flex justify-center items-center mt-7">
-            <Pagination count={4} />
+            {data?.length > 0 && (
+              <Pagination
+                onChange={handlePageChange}
+                count={pagination?.tolalPages}
+                page={pagination?.current}
+              />
+            )}
           </div>
         </div>
       </div>

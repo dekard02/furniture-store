@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems);
+
   const cartItemsTotal = useSelector(cartItemsTotalSelector);
   useEffect(() => {
     // 👇️ scroll to top on page load
