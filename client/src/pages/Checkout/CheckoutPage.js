@@ -38,7 +38,7 @@ const CheckoutPage = () => {
   const [districts, setDistricts] = useState([]);
   const { cartItems } = useSelector((state) => state.cart);
   const cartItemsTotal = useSelector(cartItemsTotalSelector);
-  const priceShipping = 35000;
+  const priceShipping = 150000;
   const {
     control,
     handleSubmit,

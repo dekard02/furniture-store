@@ -12,7 +12,7 @@ const Products = () => {
   const dispatch = useDispatch();
   const [filters, setFilter] = useState({
     page: 1,
-    perPage: 2,
+    perPage: 6,
   });
   const [pagination, setPagination] = useState({
     current: 1,

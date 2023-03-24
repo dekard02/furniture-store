@@ -39,12 +39,18 @@ const SignIn = () => {
       const resultAction = await dispatch(action);
       const data = unwrapResult(resultAction);
       console.log(data);
-      Swal.fire({
-        text: "Đăng nhập thành công",
-        icon: "success",
-      });
-
-      // navigate("/");
+      if (data.status !== "success") {
+        Swal.fire({
+          text: data.message,
+          icon: "error",
+        });
+      } else {
+        Swal.fire({
+          text: "Đăng nhập thành công",
+          icon: "success",
+        });
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }

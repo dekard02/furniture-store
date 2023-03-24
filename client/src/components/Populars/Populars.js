@@ -9,12 +9,13 @@ import { useSelector } from "react-redux";
 import LoadingSkeleton from "../../components/Loading/LoadingSkeleton";
 const Populars = ({ data = [] }) => {
   const { loading } = useSelector((state) => state.global);
+  console.log(process.env);
   return (
     <StyledPopular className="section-populars">
       <div className="pb-12">
         <h4 className="section-title">Most Popular Items</h4>
 
-        {!loading ? (
+        {loading ? (
           <LoadingSkeleton />
         ) : (
           <div className="grid gap-y-5 grid-cols-5 gap-x-7">

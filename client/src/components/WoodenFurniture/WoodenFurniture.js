@@ -21,7 +21,7 @@ const WoodenFurniture = ({ data = [] }) => {
             <img src={shape} alt="" />
           </div>
         </div>
-        {!loading ? (
+        {loading ? (
           <LoadingSkeleton columns={3} length={6} />
         ) : (
           <div className="grid grid-cols-3 gap-x-5 gap-y-4">
