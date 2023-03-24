@@ -120,12 +120,6 @@ productSchema.pre(/^find/, function (next) {
   next();
 });
 
-productSchema.virtual('reviews', {
-  ref: 'Review',
-  foreignField: 'product',
-  localField: '_id',
-});
-
 productSchema.methods.didUserBuy = async function (productId, userId) {
   const purchasedProduct = await mongoose.models.Order.aggregate([
     {
