@@ -5,6 +5,14 @@ const auth = require('../middlewares/auth');
 const router = express.Router();
 
 router.get('/me', auth.protect, userController.me);
+
+router.get(
+  '/admin',
+  auth.protect,
+  auth.authorize('MANAGER'),
+  userController.me
+);
+
 router.put(
   '/me',
   auth.protect,
