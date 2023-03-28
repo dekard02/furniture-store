@@ -5,7 +5,7 @@ const auth = require('../middlewares/auth');
 const router = express.Router();
 
 router.get('/', auth.protect, orderController.getAllOrders);
-router.get('/:id', auth.protect, orderController.getOrder);
+router.get('/:id', orderController.getOrder);
 router.post('/', orderController.createOrder);
 
 router.put(
