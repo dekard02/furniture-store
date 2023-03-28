@@ -11,10 +11,6 @@ exports.getAllOrders = asyncHandler(async (req, res, next) => {
   }
 
   await features.search().filter().sort().limitFields().paginate();
-
-  if (req.user.role === 'CUSTOMER') {
-    features.mongooseQuery.find({ user: req.user.get('_id') });
-  }
   const orders = await features.mongooseQuery;
 
   return res.status(200).json({
@@ -26,9 +22,6 @@ exports.getAllOrders = asyncHandler(async (req, res, next) => {
 
 exports.getOrder = asyncHandler(async (req, res, next) => {
   const orderQuery = Order.findById(req.params.id);
-  if (req.user.role === 'CUSTOMER') {
-    orderQuery.findOne({ user: req.user.get('_id') }).select('-user');
-  }
   const order = await orderQuery;
 
   if (!order) throw new AppError('Không tìm thấy đơn hàng với id này', 404);
