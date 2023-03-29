@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register } from "../../store/auth/userSlice";
+import getMessage from "../../utils/getMessage";
 
 const schemaValidate = yup.object({
   fullName: yup.string().required("Vui lòng nhập họ và tên"),
@@ -48,16 +49,9 @@ const SignUp = () => {
       const resultAction = await dispatch(action);
       const data = unwrapResult(resultAction);
       if (data.status === "fail") {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
+        getMessage(data.message, "error");
       } else {
-        Swal.fire({
-          text: "Tạo tài khoản thành công",
-          icon: "success",
-        });
-
+        getMessage("Tạo tài khoản thành công 😍", "success");
         navigate("/");
       }
     } catch (err) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ButtonPlay from "../../components/BannerVideo/ButtonPlay/ButtonPlay";
 import BreadCrumb from "../../components/BreadCrumb/BreadCrumb";
 import img from "../../assets/aboutbg.webp";
@@ -39,7 +39,9 @@ const About = () => {
   React.useEffect(() => {
     document.title = "About";
   }, []);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <StyledAbout className="about-page">
       <BreadCrumb heading="About Us" title="Home - About Us" />

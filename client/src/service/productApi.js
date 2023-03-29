@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const productApi = {
   getAllProduct(params) {
-    const url = "/products/?inStock[gt]=0";
+    const url = "/products/?inStock[gt]=0&isDeleted=false";
     return axiosClient.get(url, {
       params: params,
     });

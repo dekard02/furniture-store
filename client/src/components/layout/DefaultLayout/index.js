@@ -10,7 +10,7 @@ import VideoModal from "./video/VideoModal";
 const DefaultLayout = ({ children }) => {
   const { selectedProduct } = useSelector((state) => state.global);
   return (
-    <div className="w-full app">
+    <div className="w-full overflow-hidden app">
       <Header />
       <>{children}</>
       <NewsLetter />

@@ -5,5 +5,9 @@ const orderApi = {
     const url = `/orders`;
     return axiosClient.post(url, data);
   },
+  getOrder(data) {
+    const url = `/orders`;
+    return axiosClient.get(url, data);
+  },
 };
 export default orderApi;

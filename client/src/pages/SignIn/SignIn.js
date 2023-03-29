@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import { login, register } from "../../store/auth/userSlice";
 import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
+import getMessage from "../../utils/getMessage";
 
 const schemaValidate = yup.object({
   email: yup
@@ -24,6 +25,7 @@ const schemaValidate = yup.object({
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const {
     control,
     handleSubmit,
@@ -40,15 +42,9 @@ const SignIn = () => {
       const data = unwrapResult(resultAction);
       console.log(data);
       if (data.status !== "success") {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
+        getMessage(data.message, "error");
       } else {
-        Swal.fire({
-          text: "Đăng nhập thành công",
-          icon: "success",
-        });
+        getMessage("Đăng nhập thành công 😍", "success");
         navigate("/");
       }
     } catch (error) {

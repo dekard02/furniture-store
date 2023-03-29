@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 import { removeFromWishlist } from "../store/wishlistSlice/wishlistSlice";
+import getMessage from "./getMessage";
 
 function handleRemoveFromWishlist(productNeedRemove, dispatch) {
   Swal.fire({
@@ -12,10 +13,7 @@ function handleRemoveFromWishlist(productNeedRemove, dispatch) {
   }).then((result) => {
     if (result.isConfirmed) {
       dispatch(removeFromWishlist(productNeedRemove));
-      Swal.fire({
-        text: "Sản phẩm đã được xóa khỏi danh sách yêu thích!",
-        icon: "success",
-      });
+      getMessage("Sản phẩm đã được xóa khỏi danh sách yêu thích!", "success");
     }
   });
 }
