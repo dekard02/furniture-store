@@ -26,7 +26,7 @@ const WoodenFurniture = ({ data = [] }) => {
         ) : (
           <div className="grid grid-cols-3 gap-x-5 gap-y-4">
             {data.length > 0 &&
-              data.map((item, index) => {
+              data.slice(0, 6).map((item, index) => {
                 return <ProductItem item={item} key={item._id} />;
               })}
           </div>

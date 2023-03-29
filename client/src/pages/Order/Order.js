@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../components/BreadCrumb/BreadCrumb";
 import styled from "styled-components";
+import axios from "axios";
+import orderApi from "../../service/orderApi";
 const Order = () => {
-  const date = new Date();
-  console.log(date);
+  const [orders, setOrders] = useState([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await orderApi.getOrder();
+        if (res && res.orders) {
+          setOrders(res.orders);
+        }
+        console.log(res);
+      } catch (error) {}
+    };
+    fetchProducts();
+  }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <StyledOrder className="order-page">
       <BreadCrumb heading="My Account" title="Home -  My Account" />
@@ -13,7 +29,7 @@ const Order = () => {
             <h3 className="text-secondary text-2xl font-semibold">
               Lịch sử đơn hàng
             </h3>
-            <span>Ngày Đặt hàng:{date.toString()}</span>
+            {/* <span>Ngày Đặt hàng:{date.toString()}</span> */}
             <div className="border gap-y-4 p-3 w-full border-gray-200">
               <div className="flex h-[300px] has-scrollbar flex-col gap-y-3">
                 <div className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md">

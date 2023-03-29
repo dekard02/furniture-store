@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Swal from "sweetalert2";
+import getMessage from "../../utils/getMessage";
 const initialState = {
   wishlists: localStorage.getItem("wishlist_items")
     ? JSON.parse(localStorage.getItem("wishlist_items"))
@@ -13,26 +14,26 @@ export const wishlistSLice = createSlice({
     addToWishlist: (state, action) => {
       let newWishlist = action.payload;
       let index = state.wishlists.findIndex(
-        (item) => item.id === newWishlist.id
+        (item) => item._id === newWishlist._id
       );
       if (index !== -1) {
-        Swal.fire({
-          icon: "error",
-          text: "Sản phẩm này đã được thêm vào danh sách yêu thích!",
-        });
+        getMessage(
+          "Sản phẩm này đã được thêm vào danh sách yêu thích",
+          "error"
+        );
       } else {
         state.wishlists.push(newWishlist);
-        Swal.fire({
-          icon: "success",
-          text: "Sản phẩm thêm vào danh sách yêu thích thành công!",
-        });
+        getMessage(
+          "Sản phẩm thêm vào danh sách yêu thích thành công😍",
+          "success"
+        );
       }
       localStorage.setItem("wishlist_items", JSON.stringify(state.wishlists));
     },
     removeFromWishlist: (state, action) => {
       let productNeedRemove = action.payload;
       state.wishlists = state.wishlists.filter(
-        (item) => item.id !== productNeedRemove.id
+        (item) => item._id !== productNeedRemove._id
       );
       localStorage.setItem("wishlist_items", JSON.stringify(state.wishlists));
     },

@@ -8,9 +8,6 @@ const initialState = {
   currentUser: localStorage.getItem(StorageKeys.USER)
     ? JSON.parse(localStorage.getItem(StorageKeys.USER))
     : {},
-  // token: localStorage.getItem(StorageKeys.TOKEN)
-  //   ? JSON.parse(localStorage.getItem(StorageKeys.TOKEN))
-  //   : "",
 };
 export const register = createAsyncThunk("user/register", async (payload) => {
   //call api to register
@@ -25,8 +22,13 @@ export const login = createAsyncThunk("user/login", async (payload) => {
   //call api to login
   const data = await userApi.login(payload);
   //save data to localstorage
-  localStorage.setItem(StorageKeys.TOKEN, data.token);
-  localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
+  if (data.token) {
+    localStorage.setItem(StorageKeys.TOKEN, data.token);
+  }
+
+  if (data.user) {
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
+  }
   //return info user
   return data;
 });

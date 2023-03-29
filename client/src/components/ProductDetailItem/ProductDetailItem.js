@@ -8,6 +8,7 @@ import styled from "styled-components";
 import handleAddToWishlist from "../../utils/handleAddToWishlist";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import getMessage from "../../utils/getMessage";
 const ProductDetailItem = ({ item = {}, isQickView = false }) => {
   const { price } = item;
   const [imgPreview, setImgPreview] = useState("");
@@ -19,10 +20,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
   };
   const handleDec = () => {
     if (quantity === 1) {
-      Swal.fire({
-        text: "Số lượng tối thiểu phải là 1",
-        icon: "error",
-      });
+      getMessage("Số lượng tối thiểu phải là 1", "error");
       setQuantity(1);
     } else {
       setQuantity(quantity - 1);
