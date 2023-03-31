@@ -1,3 +1,4 @@
+const fs = require('fs/promises');
 const multer = require('multer');
 const asyncHandler = require('../errors/asyncHandler');
 const { saveImage } = require('../utils/image');
@@ -85,27 +86,6 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.updateProduct = asyncHandler(async (req, res, next) => {
-  if (req.files) {
-    validateProductImages(req);
-    await saveProductImages(req.files, req.params.id);
-  }
-
-  const product = await Product.findByIdAndUpdate(
-    req.params.id,
-    omitFields(req.body, 'images'),
-    {
-      runValidators: true,
-      new: true,
-    }
-  );
-
-  return res.status(200).json({
-    status: 'success',
-    product: product,
-  });
-});
-
 exports.deleteProduct = asyncHandler(async (req, res, next) => {
   const product = await Product.findByIdAndUpdate(
     req.params.id,
@@ -120,6 +100,70 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
   if (!product) throw new AppError('Không tồn tại dữ liệu với id này', 404);
 
   return res.status(204).json({
+    status: 'success',
+    product,
+  });
+});
+
+exports.updateProduct = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { deleteImg } = req.body;
+  const oldProduct = await Product.findById(id);
+  if (!oldProduct) throw new AppError('Không tồn tại dữ liệu với id này', 404);
+
+  // validate
+  let deleteImgDir = [];
+  if (deleteImg) {
+    [deleteImg].flat().forEach((val) => {
+      if (
+        oldProduct.images.every((img) => {
+          return img !== val;
+        })
+      ) {
+        throw new AppError('Anh khong ton tai', 400);
+      }
+    });
+    deleteImgDir = [deleteImg].flat().map((imgDir) => imgDir.split('/').pop());
+  }
+  const newImgDir = [];
+  const oldImgDir = oldProduct.images.filter(
+    (val) => !deleteImg?.includes(val)
+  );
+  if (req.files) {
+    if (req.files.length + oldImgDir.length < 3) {
+      return res.status(400).json({
+        success: false,
+        message: 'Phải có tối thiểu 3 bức ảnh',
+      });
+    }
+    await Promise.all(
+      req.files.map(async (file, index) => {
+        const fileName = `product-${id}-${Date.now()}-${index + 1}.png`;
+        const filePath = `public/images/products/${fileName}`;
+        await saveImage(file.buffer, 700, null, `./${filePath}`);
+        newImgDir.push(filePath);
+      })
+    );
+  }
+  const product = await Product.findByIdAndUpdate(
+    id,
+    {
+      ...req.body,
+      images: [...oldImgDir, ...newImgDir],
+    },
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
+
+  await Promise.all(
+    deleteImgDir.map(async (each) =>
+      fs.unlink('public/images/products/' + each)
+    )
+  );
+
+  return res.status(200).json({
     status: 'success',
     product,
   });

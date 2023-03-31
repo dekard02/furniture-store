@@ -21,6 +21,13 @@ router.put(
   productController.uploadProductImages,
   productController.updateProduct
 );
+router.patch(
+  '/:id',
+  auth.protect,
+  auth.authorize('MANAGER', 'STAFF'),
+  productController.uploadProductImages,
+  productController.updateProduct
+);
 
 router.delete('/:id', productController.deleteProduct);
 
