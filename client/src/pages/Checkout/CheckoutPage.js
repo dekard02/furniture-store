@@ -17,6 +17,7 @@ import { cartItemsTotalSelector } from "../../store/cartSlice/Selector";
 import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
 import { provineApi } from "../../service/provineApi";
 import orderApi from "../../service/orderApi";
+import getMessage from "../../utils/getMessage";
 const schema = yup.object({
   fullName: yup.string().required("Vui lòng nhập họ tên!"),
   email: yup
@@ -66,23 +67,22 @@ const CheckoutPage = () => {
       fullName: values.fullName,
       phoneNumber: values.phoneNumber,
       address: `${
-        values.address + "," + values.cityAddress + "," + values.districtAddress
+        values.address +
+        ", " +
+        values.cityAddress +
+        ", " +
+        values.districtAddress
       }`,
       products: [...productOrders],
     };
     try {
       const res = await orderApi.createOrder(order);
+      console.log(order);
       if (res.status !== "success") {
-        Swal.fire({
-          text: res.errors.amount,
-          icon: "error",
-        });
+        getMessage(res.errors.amount, "error");
       } else {
         console.log(res);
-        Swal.fire({
-          text: "Đặt hàng thành công",
-          icon: "success",
-        });
+        getMessage("Đặt hàng thành công 😍", "success");
         dispatch(removeAllProduct([]));
         navigate("/checkout-success");
       }
@@ -115,6 +115,9 @@ const CheckoutPage = () => {
       });
     }
   }, [errors]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <StyledCheckout className="checkout-page">
       <BreadCrumb heading="Checkout" title="Home - Checkout" />

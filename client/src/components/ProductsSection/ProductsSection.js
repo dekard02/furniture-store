@@ -4,17 +4,23 @@ import ProductItem from "../../components/ProductItem/ProductItem";
 import Pagination from "@mui/material/Pagination";
 import { LoadingSkeleton } from "../Loading";
 import { useSelector } from "react-redux";
+
 const ProductsSection = ({
   data = [],
   pagination = {},
   handlePageChange,
-  setFilterChange,
+  onChange,
   searchValue,
+  onSortChange,
+  filters,
+  values,
+  onSalePriceChange,
+  onSubmitValue,
 }) => {
   const { loading } = useSelector((state) => state.global);
   return (
     <StyledDiv className="products-section wrapper-layout section">
-      <div className="flex gap-x-5 relative">
+      <div className="flex gap-x-10 relative">
         <div className="w-[30%] flex flex-col gap-y-4">
           <div className="search-section p-5 rounded-md ">
             <div className="flex flex-col gap-y-3">
@@ -30,7 +36,7 @@ const ProductsSection = ({
               </div>
               <div className="search-form flex relative overflow-hidden">
                 <input
-                  onChange={(e) => setFilterChange(e.target.value)}
+                  onChange={(e) => onChange(e.target.value)}
                   className="text-textPrimary flex-1 border-r-0 text-sm outline-none h-10 border border-gray-400 rounded-sm px-3 focus:border-bgPrimary"
                   type="text"
                   placeholder="Search by"
@@ -52,15 +58,33 @@ const ProductsSection = ({
                 Filter By Price
               </div>
             </div>
-            <div className="my-4 gap-y-3 flex flex-col">
+            <div className="my-4 gap-y-2 flex flex-col">
               <div className="relative">
-                <button className="text-bgPrimary font-semibold text-base border-b-2 border-bgPrimary">
+                <button
+                  onClick={() => onSortChange(`price`)}
+                  style={{
+                    color: filters.sort === "price" ? "#f51c1c" : "#666666",
+                    borderBottom: `2px solid ${
+                      filters.sort === "price" ? "#f51c1c" : "transparent"
+                    }`,
+                  }}
+                  className="font-semibold select-none text-base"
+                >
                   Low to high
                   <i className="bi bi-arrow-up"></i>
                 </button>
               </div>
               <div className="relative">
-                <button className="text-textPrimary font-semibold text-base">
+                <button
+                  style={{
+                    color: filters.sort === "-price" ? "#f51c1c" : "#666666",
+                    borderBottom: `2px solid ${
+                      filters.sort === "-price" ? "#f51c1c" : "transparent"
+                    }`,
+                  }}
+                  onClick={() => onSortChange(`-price`)}
+                  className="font-semibold select-none text-base"
+                >
                   High to low
                   <i className="bi  bi-arrow-down"></i>
                 </button>
@@ -73,12 +97,15 @@ const ProductsSection = ({
                 </span>
                 <div className="p-3 flex gap-x-2 border border-gray-400 rounded-sm">
                   <span className="text-secondary font-semibold text-sm">
-                    $
+                    VND
                   </span>
                   <input
                     placeholder=""
                     type="number"
                     min={0}
+                    value={values.salePrice_gte}
+                    onChange={onSalePriceChange}
+                    name="salePrice_gte"
                     className="outline-none w-full text-secondary text-xs font-light"
                   />
                 </div>
@@ -90,18 +117,24 @@ const ProductsSection = ({
                 </span>
                 <div className="p-3 flex gap-x-2 border border-gray-400 rounded-sm">
                   <span className="text-secondary font-semibold text-sm">
-                    $
+                    VND
                   </span>
                   <input
-                    placeholder="250000"
+                    placeholder=""
                     type="number"
+                    name="salePrice_lt"
                     min={0}
+                    value={values.salePrice_lt}
+                    onChange={onSalePriceChange}
                     className="outline-none w-full text-secondary text-xs font-light"
                   />
                 </div>
               </div>
             </div>
-            <button className="text-white bg-bgPrimary px-5 mt-4 py-2 rounded-md text-base font-medium hover:bg-secondary transition-all">
+            <button
+              onClick={onSubmitValue}
+              className="text-white bg-bgPrimary px-5 mt-4 py-2 rounded-md text-base font-medium hover:bg-secondary transition-all"
+            >
               Filter
             </button>
           </div>

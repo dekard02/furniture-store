@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const getOrderStatus = require('../utils/getOrderStatus');
 
 const orderSchema = new mongoose.Schema(
   {
@@ -76,13 +77,15 @@ const orderSchema = new mongoose.Schema(
     id: false,
     timestamps: true,
     versionKey: false,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: { virtuals: true, getters: true },
+    toObject: { virtuals: true, getters: true },
   }
 );
 
 orderSchema.index({ fullName: 1, phoneNumber: 1 });
 orderSchema.index({ '$**': 'text' });
+
+orderSchema.path('status').get((value) => getOrderStatus(value));
 
 orderSchema.pre('save', async function (next) {
   this.products = await Promise.all(
