@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema(
       trim: true,
       required: [true, 'Tên sản phẩm không được bỏ trống'],
       minLength: [10, 'Tên loại sản phẩm phải tối thiểu 10 ký tự'],
-      maxLength: [50, 'Tên loại sản phẩm phải tối đa 50 ký tự'],
+      maxLength: [100, 'Tên loại sản phẩm phải tối đa 100 ký tự'],
       unique: true,
       uniqueCaseInsensitive: true,
     },
