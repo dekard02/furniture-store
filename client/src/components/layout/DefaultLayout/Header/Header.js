@@ -10,6 +10,7 @@ import { FiLogIn } from "react-icons/fi";
 import { BiLogInCircle, BiLogOutCircle } from "react-icons/bi";
 import { setLogout } from "../../../../store/auth/userSlice";
 import Swal from "sweetalert2";
+import getMessage from "../../../../utils/getMessage";
 
 const Header = () => {
   const { scrollValid } = useSelector((state) => state.global);
@@ -31,10 +32,7 @@ const Header = () => {
   }, []);
   const handleLogOut = () => {
     dispatch(setLogout());
-    Swal.fire({
-      text: "Đăng xuất thành công",
-      icon: "success",
-    });
+    getMessage("Đăng xuất thành công", "success");
   };
   return (
     <StyledHeader

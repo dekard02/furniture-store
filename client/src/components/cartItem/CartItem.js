@@ -6,6 +6,7 @@ import {
   removeFromCart,
   setQuantityCart,
 } from "../../store/cartSlice/cartSlice";
+import getMessage from "../../utils/getMessage";
 import handleAddToCart from "../../utils/handleAddToCart";
 import handleRemoveFromWishlist from "../../utils/handleRemoveFromWishlist";
 import Button from "../Button/Button";
@@ -24,10 +25,7 @@ const CartItem = ({ item = {}, isWishList = false }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(removeFromCart(productNeedRemove));
-        Swal.fire({
-          text: "Sản phẩm đã được xóa khỏi giỏ hàng!",
-          icon: "success",
-        });
+        getMessage("Sản phẩm đã được xóa khỏi giỏ hàng!", "success");
       }
     });
   };

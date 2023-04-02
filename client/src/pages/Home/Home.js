@@ -13,8 +13,6 @@ import { setLoadingSkeleton } from "../../store/global/globalSlice";
 const Home = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user);
-  console.log(token);
   useEffect(() => {
     document.title = "Trang Chủ";
     const fetchProducts = async () => {
