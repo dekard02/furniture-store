@@ -21,57 +21,78 @@ import OrderDetail from "../Admin/components/OrderDetail";
 import AllOrder from "../Admin/pages/Order/AllOrder";
 
 export const publicRoutes = [
-    {
-        path: "/",
-        component: Home,
-    },
-    {
-        path: "/products",
-        component: Products,
-    },
-    {
-        path: "/about",
-        component: About,
-    },
-    {
-        path: "/cart",
-        component: CartPage,
-    },
-    {
-        path: "/products/:slug",
-        component: ProductDetail,
-    },
-    {
-        path: "/wishlist",
-        component: WishList,
-    },
-    {
-        path: "/checkout",
-        component: CheckoutPage,
-    },
-    {
-        path: "/checkout-success",
-        component: CheckoutSuccess,
-    },
-    {
-        path: "/sign-up",
-        component: SignUp,
-    },
-    {
-        path: "/sign-in",
-        component: SignIn,
-    },
-    {
-        path: "/order",
-        component: Order,
-    },
-    {
-        path: "/profile",
-        component: Profile,
-    },
+  {
+    path: "/",
+    component: Home,
+  },
+  {
+    path: "/products",
+    component: Products,
+  },
+  {
+    path: "/about",
+    component: About,
+  },
+  {
+    path: "/cart",
+    component: CartPage,
+  },
+  {
+    path: "/products/:slug",
+    component: ProductDetail,
+  },
+  {
+    path: "/wishlist",
+    component: WishList,
+  },
+  {
+    path: "/checkout",
+    component: CheckoutPage,
+  },
+  {
+    path: "/checkout-success",
+    component: CheckoutSuccess,
+  },
+  {
+    path: "/checkout-success/:id",
+    component: CheckoutSuccess,
+  },
+  {
+    path: "/sign-up",
+    component: SignUp,
+  },
+  {
+    path: "/sign-in",
+    component: SignIn,
+  },
+
+  {
+    path: "/profile",
+    component: Profile,
+  },
 ];
 
 export const privateRouter = [
+  {
+    path: "/admin",
+    component: <DefaultLayout></DefaultLayout>,
+  },
+  {
+    path: "/admin/category",
+    component: (
+      <DefaultLayout>
+        <AllCategory></AllCategory>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "admin/product",
+    component: (
+      <DefaultLayout>
+        <AllProduct></AllProduct>
+      </DefaultLayout>
+    ),
+  },
     {
         path: "/admin",
         component: (

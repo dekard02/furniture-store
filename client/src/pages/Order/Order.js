@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../components/BreadCrumb/BreadCrumb";
 import styled from "styled-components";
-import axios from "axios";
 import orderApi from "../../service/orderApi";
+import getCreatedAt from "../../utils/getCreatedAt";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 const Order = () => {
   const [orders, setOrders] = useState([]);
+  const { currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await orderApi.getOrder();
-        if (res && res.orders) {
-          setOrders(res.orders);
+        if (currentUser.email) {
+          const res = await orderApi.getOrders();
+          if (res && res.orders) {
+            setOrders(res.orders);
+          }
+        } else {
+          const id = localStorage.getItem("order_id");
+          const res = await orderApi.getOrder("642462ee1bf04ddf868edb35");
+          if (res && res.orders) {
+            setOrders(res.orders);
+            console.log(res.orders);
+          }
         }
-        console.log(res);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchProducts();
   }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   return (
     <StyledOrder className="order-page">
       <BreadCrumb heading="My Account" title="Home -  My Account" />
@@ -29,149 +43,68 @@ const Order = () => {
             <h3 className="text-secondary text-2xl font-semibold">
               Lịch sử đơn hàng
             </h3>
-            {/* <span>Ngày Đặt hàng:{date.toString()}</span> */}
-            <div className="border gap-y-4 p-3 w-full border-gray-200">
-              <div className="flex h-[300px] has-scrollbar flex-col gap-y-3">
-                <div className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md">
-                  <div className="relative">
-                    <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
-                      <img
-                        className="object-cover w-full rounded-md"
-                        src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/product13.webp"
-                        alt=""
-                      />
+            <div className="order-list gap-y-3 flex flex-col">
+              {orders &&
+                orders.length > 0 &&
+                orders.map((order) => {
+                  const { products, createdAt } = order;
+
+                  return (
+                    <div
+                      key={order._id}
+                      className="relative flex flex-col gap-y-2"
+                    >
+                      <div className="flex flex-col gap-y-1">
+                        <div className="flex items-center gap-x-3">
+                          <span>Trạng thái:</span>
+                          <span>{order.status}</span>
+                        </div>
+                        <div className="flex items-center gap-x-3">
+                          <span>Ngày tạo:</span>
+                          <span>{getCreatedAt(createdAt)}</span>
+                        </div>
+                      </div>
+                      <div className="border gap-y-4 p-3 w-full border-gray-200">
+                        <div className="flex h-[150px] has-scrollbar flex-col gap-y-3">
+                          {products &&
+                            products.length > 0 &&
+                            products.map((item) => {
+                              const { product, price, amount } = item;
+                              return (
+                                <div
+                                  key={item._id}
+                                  className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md"
+                                >
+                                  <div className="relative">
+                                    <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
+                                      <img
+                                        className="object-cover w-full rounded-md"
+                                        src={product?.images?.shift()}
+                                        alt=""
+                                      />
+                                    </div>
+                                    <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
+                                      {item?.amount}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between w-full pl-4">
+                                    <div className="relative ">
+                                      <span className="text-base font-light text-textPrimary">
+                                        {product?.name}
+                                      </span>
+                                    </div>
+                                    <span className="text-sm font-light text-textPrimary">
+                                      {(amount * price).toLocaleString()} VND
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
                     </div>
-                    <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
-                      20
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between w-full pl-4">
-                    <div className="relative ">
-                      <span className="text-base font-light text-textPrimary">
-                        ghe
-                      </span>
-                      <p className="text-xs font-light text-textColor">
-                        COLOR: Blue
-                      </p>
-                    </div>
-                    <span className="text-sm font-light text-textPrimary">
-                      202200
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md">
-                  <div className="relative">
-                    <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
-                      <img
-                        className="object-cover w-full rounded-md"
-                        src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/product13.webp"
-                        alt=""
-                      />
-                    </div>
-                    <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
-                      20
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between w-full pl-4">
-                    <div className="relative ">
-                      <span className="text-base font-light text-textPrimary">
-                        ghe
-                      </span>
-                      <p className="text-xs font-light text-textColor">
-                        COLOR: Blue
-                      </p>
-                    </div>
-                    <span className="text-sm font-light text-textPrimary">
-                      202200
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md">
-                  <div className="relative">
-                    <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
-                      <img
-                        className="object-cover w-full rounded-md"
-                        src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/product13.webp"
-                        alt=""
-                      />
-                    </div>
-                    <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
-                      20
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between w-full pl-4">
-                    <div className="relative ">
-                      <span className="text-base font-light text-textPrimary">
-                        ghe
-                      </span>
-                      <p className="text-xs font-light text-textColor">
-                        COLOR: Blue
-                      </p>
-                    </div>
-                    <span className="text-sm font-light text-textPrimary">
-                      202200
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md">
-                  <div className="relative">
-                    <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
-                      <img
-                        className="object-cover w-full rounded-md"
-                        src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/product13.webp"
-                        alt=""
-                      />
-                    </div>
-                    <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
-                      20
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between w-full pl-4">
-                    <div className="relative ">
-                      <span className="text-base font-light text-textPrimary">
-                        ghe
-                      </span>
-                      <p className="text-xs font-light text-textColor">
-                        COLOR: Blue
-                      </p>
-                    </div>
-                    <span className="text-sm font-light text-textPrimary">
-                      202200
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center px-2 py-2 bg-white border-b border-gray-300 rounded-md">
-                  <div className="relative">
-                    <div className="relative overflow-hidden bg-white border border-gray-300 rounded-md w-14 h-14">
-                      <img
-                        className="object-cover w-full rounded-md"
-                        src="https://risingtheme.com/html/demo-furea/furea/assets/img/product/product13.webp"
-                        alt=""
-                      />
-                    </div>
-                    <span className="absolute -top-[10px] -right-2 w-5 h-5 flex justify-center items-center text-sm font-light leading-[0] text-white bg-gray-600 rounded-full ">
-                      20
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between w-full pl-4">
-                    <div className="relative ">
-                      <span className="text-base font-light text-textPrimary">
-                        ghe
-                      </span>
-                      <p className="text-xs font-light text-textColor">
-                        COLOR: Blue
-                      </p>
-                    </div>
-                    <span className="text-sm font-light text-textPrimary">
-                      202200
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-x-3 items-center justify-end">
-                <span>Tổng tiền:</span>
-                <span>7.500.000</span>
-              </div>
+                  );
+                })}
             </div>
           </div>
         </div>

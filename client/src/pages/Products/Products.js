@@ -13,7 +13,6 @@ const Products = () => {
     salePrice_gte: 0,
     salePrice_lt: 0,
   });
-  console.log(data);
   const debounced = useDebounce(searchValue, 600);
   const dispatch = useDispatch();
   const [filters, setFilter] = useState({

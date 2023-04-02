@@ -36,7 +36,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
       return null;
     }
     if (item && item.images) {
-      setImgPreview(item.images[0]);
+      setImgPreview(item.images?.[0]);
     }
   }, [item]);
 

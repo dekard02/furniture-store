@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Banner from "../../components/Banner/Banner";
 import BannerSection from "../../components/BannerSection/BannerSection";
 import BannerVideo from "../../components/BannerVideo/BannerVideo";
