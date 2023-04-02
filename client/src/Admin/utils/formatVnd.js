@@ -1,4 +1,4 @@
-export const formatVnd = (str) => {
+export const formatVnd = (str = "") => {
     return str
         .split("")
         .reverse()

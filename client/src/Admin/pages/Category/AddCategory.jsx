@@ -24,7 +24,7 @@ export default function AddCategory() {
         validateOnChange: false,
     });
     return (
-        <div className=" bg-white shadow-md px-5 py-5">
+        <div className=" bg-white px-5 py-5 rounded-[15px]">
             <h4 className="mb-5 font-semibold text-[20px]">Add Category</h4>
             <form className="text-center" onSubmit={category.handleSubmit}>
                 <Input
