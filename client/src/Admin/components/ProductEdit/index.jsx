@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-import { HiXMark } from "react-icons/hi2";
 import InputDetail from "../InputDetail";
 import Modal from "../Modal";
 import { useFormik } from "formik";
@@ -8,71 +6,46 @@ import TextArea from "../TextArea";
 import { useEffect, useState } from "react";
 import Select from "../Select";
 import { UseEditProduct } from "../../hook/useProduct";
+import ChooseImg from "../ChooseImg";
+import { formData } from "../../utils/formData";
+import { useContextLoading } from "../../context/loadingContext";
 function ProductEdit({ data, render, get, isOpen, setIsOpen }) {
+    const { setIsLoading } = useContextLoading();
     const [img, setImg] = useState([]);
-    const [select, setSelect] = useState();
-    const handelChange = (e) => {
-        if (
-            window.File &&
-            window.FileReader &&
-            window.FileList &&
-            window.Blob
-        ) {
-            const data = Object.keys(e.target.files);
-
-            const check = data.every((val) =>
-                /(\.|\/)(gif|jpe?g|png)$/i.test(e.target.files[val].type)
-            );
-            if (!check) {
-                toast.error("File invalid. Please choose correct file!", {
-                    position: toast.POSITION.TOP_RIGHT,
-                    theme: "dark",
-                });
-                return null;
-            }
-            let arr = [];
-            data.forEach((val) => {
-                const file = e.target.files[val];
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    arr = [...arr, event.target.result];
-                };
-                reader.onloadend = function () {
-                    console.log([...img, ...arr]);
-                    setImg([...img, ...arr]);
-                };
-                reader.readAsDataURL(file);
-            });
-        } else {
-            toast.error("File invalid. Please choose correct file!", {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: "dark",
-            });
-        }
-    };
-    const handelDeleteImage = (id) => {
-        const clear = img.filter((val) => val !== id);
-        setImg(clear);
-    };
-    const handelSelect = async (id) => {
-        setSelect(id);
-    };
-    const handelSubmit = () => {
-        if (formik.errors === {}) {
-            console.log(formik.errors);
+    const [select, setSelect] = useState(data?.categories);
+    const [file, setFile] = useState([]);
+    const [deleteImg, setDeleteImg] = useState([]);
+    const handelSubmit = async () => {
+        const { name, price, inStock, description } = formik.values;
+        if (!select || select.length === 0) {
             return;
         }
-        const categories = select && {
-            categories: [
-                {
-                    _id: select,
-                },
-            ],
-        };
-        const product = Object.assign({}, formik.values, categories);
-        UseEditProduct(product, data._id);
-        setIsOpen(false);
-        get(!render);
+        if (formik.errors === {}) {
+            return;
+        }
+        const categories = select.map((val) => val._id);
+        const form = new FormData();
+        const payload = formData(form, {
+            name,
+            price,
+            inStock,
+            description,
+            categories,
+            deleteImg,
+            file,
+        });
+        try {
+            setIsLoading(true);
+            setIsOpen(false);
+            await UseEditProduct(payload, data._id);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            get(!render);
+            setFile([]);
+            setDeleteImg([]);
+            setIsLoading(false);
+        }
     };
     const formik = useFormik({
         initialValues: {
@@ -89,24 +62,19 @@ function ProductEdit({ data, render, get, isOpen, setIsOpen }) {
             price: Yub.number().min(0).required("Please provide price product"),
             inStock: Yub.number().required("Please provide quantity product"),
         }),
-        onsubmit: async (values) => {
-            try {
-                alert(JSON.stringify(values, null, 2));
-            } catch (error) {
-                console.log(123);
-            }
-        },
+        onsubmit: async (values) => {},
         enableReinitialize: true,
     });
     useEffect(() => {
         setImg(data?.images);
+        setSelect(data?.categories);
     }, [isOpen]);
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <h4 className="text-gray-600 text-[20px] flex items-center">
                 Detail
             </h4>
-            <Select data={data?.categories} change={handelSelect} />
+            <Select select={select} setSelect={setSelect} />
             <div className="grid grid-cols-3 gap-y-4 gap-x-5 my-5">
                 <InputDetail
                     disabled={false}
@@ -141,30 +109,15 @@ function ProductEdit({ data, render, get, isOpen, setIsOpen }) {
                 id="description"
                 fomikHandelChange={formik.handleChange}
             />
-            <div className="grid grid-cols-6 gap-4 mt-3 pt-2 bg-[#F5F5F1]">
-                {img?.map((val, index) => {
-                    return (
-                        <div
-                            key={index}
-                            className=" overflow-hidden relative"
-                            style={{ border: "1px solid gray" }}
-                        >
-                            <img
-                                className="w-[100%] h-[100%] object-cover"
-                                src={val}
-                                alt="Product"
-                            />
-                            <span
-                                onClick={() => handelDeleteImage(val)}
-                                className="absolute right-1 top-1 text-[20px] text-black cursor-pointer"
-                            >
-                                <HiXMark />
-                            </span>
-                        </div>
-                    );
-                })}
-            </div>
-            <input type="file" multiple onChange={handelChange} />
+            <ChooseImg
+                img={img}
+                setImg={setImg}
+                alt="Product"
+                setFile={setFile}
+                file={file}
+                deleteImg={deleteImg}
+                setDeleteImg={setDeleteImg}
+            />
             <button
                 type="submit"
                 onClick={() => handelSubmit()}

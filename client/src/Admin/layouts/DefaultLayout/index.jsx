@@ -12,7 +12,10 @@ function DefaultLayout({ children }) {
             <LoadingProvider>
                 <ModalContextProvider>
                     <SideBarContextProvider>
-                        <div className="h-full w-[100%] flex">
+                        <div
+                            className="h-full w-[100%] flex"
+                            style={{ background: "rgb(245 248 254)" }}
+                        >
                             <SideBar />
                             <Main>
                                 <Header></Header>

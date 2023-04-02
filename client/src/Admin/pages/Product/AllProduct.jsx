@@ -52,10 +52,16 @@ export default function AllProduct() {
                     >
                         <div className="rounded-t mb-0 px-4 py-3 border-0">
                             <div className="flex flex-wrap items-center">
-                                <div className="relative w-full px-4 max-w-full flex-grow flex-1 ">
+                                <div className="relative w-full px-4 max-w-full flex-grow flex-1 flex justify-between items-center">
                                     <h3 className="font-semibold text-lg text-white">
                                         Card Tables
                                     </h3>
+                                    <a
+                                        href="add-product"
+                                        className=" bg-green-500 rounded-md py-1 px-3 text-[14px] text-white"
+                                    >
+                                        Add Product
+                                    </a>
                                 </div>
                             </div>
                         </div>

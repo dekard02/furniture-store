@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { axioAuth } from "../../utils/auth";
+import { axioAuth } from "../utils/auth";
 import { toast } from "react-toastify";
 
 export const useCategory = (page) => {

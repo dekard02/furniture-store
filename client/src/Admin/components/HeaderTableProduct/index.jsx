@@ -1,15 +1,23 @@
-import React from "react";
-
-export default function HeaderTableProduct({ data }) {
+export default function HeaderTableProduct({ data, handeTickAll, isAll }) {
     return (
         <thead className="bg-gray-800">
             <tr>
                 {data.map((val) => (
                     <th
                         key={val}
-                        className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 border-transparent whitespace-nowrap font-semibold text-left   "
+                        className="px-6 align-middle border border-solid py-3 text-xs  border-l-0 border-r-0 border-transparent whitespace-nowrap font-semibold text-left   "
                     >
-                        {val}
+                        {val !== "Tick" ? (
+                            val
+                        ) : (
+                            <input
+                                type="checkbox"
+                                checked={isAll}
+                                onChange={
+                                    val === data[0] ? handeTickAll : () => {}
+                                }
+                            />
+                        )}
                     </th>
                 ))}
             </tr>
