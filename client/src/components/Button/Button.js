@@ -6,6 +6,7 @@ const Button = ({
   className = "",
   to,
   border = false,
+  style = {},
 }) => {
   return (
     <StyledButton

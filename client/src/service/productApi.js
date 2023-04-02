@@ -8,7 +8,7 @@ const productApi = {
     });
   },
   searchProduct(params) {
-    const url = `/products/?inStock[gt]=0&q=${params}`;
+    const url = `/products/?inStock[gt]=0&isDeleted=false&q=${params}`;
     return axiosClient.get(url);
   },
   getProduct(slug) {

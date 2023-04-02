@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import ProductDetailItem from "../../components/ProductDetailItem/ProductDetailItem";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import productApi from "../../service/productApi";
 
@@ -26,7 +25,13 @@ const ProductDetail = () => {
     <StyledProductDetail className="product-detail-page">
       <BreadCrumb heading="Product Detail" title="Home - Details" />
       <div className="wrapper-layout section">
-        <ProductDetailItem item={product} />
+        {product ? (
+          <ProductDetailItem item={product} />
+        ) : (
+          <div className="text-secondary text-2xl font-medium">
+            Không tìm thấy sản phẩm
+          </div>
+        )}
       </div>
     </StyledProductDetail>
   );

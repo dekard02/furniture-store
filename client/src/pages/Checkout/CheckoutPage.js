@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { removeAllProduct } from "../../store/cartSlice/cartSlice";
-import Swal from "sweetalert2";
 import axios from "axios";
 import styled from "styled-components";
 import { MenuItem, Select } from "@mui/material";
@@ -38,6 +37,7 @@ const CheckoutPage = () => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const { cartItems } = useSelector((state) => state.cart);
+  const { currentUser } = useSelector((state) => state.user);
   const cartItemsTotal = useSelector(cartItemsTotalSelector);
   const priceShipping = 150000;
   const {
@@ -77,14 +77,17 @@ const CheckoutPage = () => {
     };
     try {
       const res = await orderApi.createOrder(order);
-      console.log(order);
+
       if (res.status !== "success") {
         getMessage(res.errors.amount, "error");
       } else {
-        console.log(res);
         getMessage("Đặt hàng thành công 😍", "success");
         dispatch(removeAllProduct([]));
-        navigate("/checkout-success");
+        if (currentUser?.user) {
+          navigate(`/checkout-success`);
+        } else {
+          navigate(`/checkout-success/${res?.order?._id}`);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -95,7 +98,6 @@ const CheckoutPage = () => {
     async function fetchProvinces() {
       try {
         const response = await axios.get(provineApi.getAllProvine());
-        console.log(response);
         if (response.data) {
           setProvinces(response.data);
         }
@@ -118,6 +120,12 @@ const CheckoutPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    if (!cartItems.length) {
+      navigate("/products");
+      getMessage("Giỏ hàng đang trống", "error");
+    }
+  }, []);
   return (
     <StyledCheckout className="checkout-page">
       <BreadCrumb heading="Checkout" title="Home - Checkout" />
@@ -132,17 +140,19 @@ const CheckoutPage = () => {
               <span className="text-xl font-medium text-secondary">
                 Thông tin giao hàng
               </span>
-              <div className="flex items-center gap-x-2">
-                <span className="text-base font-light text-gray-400">
-                  Bạn đã có tài khoản?
-                </span>
-                <NavLink
-                  to="/sign-in"
-                  className="text-lg font-light cursor-pointer text-bgPrimary"
-                >
-                  Đăng nhập
-                </NavLink>
-              </div>
+              {!currentUser?.user && (
+                <div className="flex items-center gap-x-2">
+                  <span className="text-base font-light text-gray-400">
+                    Bạn đã có tài khoản?
+                  </span>
+                  <NavLink
+                    to="/sign-in"
+                    className="text-lg font-light cursor-pointer text-bgPrimary"
+                  >
+                    Đăng nhập
+                  </NavLink>
+                </div>
+              )}
             </div>
             <Field>
               <Input
@@ -183,7 +193,11 @@ const CheckoutPage = () => {
                 <span className="absolute left-0 text-xs font-light -top-4 text-textPrimary">
                   Chọn tỉnh/thành
                 </span>
-                <Select {...register("cityAddress")} className="w-full">
+                <Select
+                  {...register("cityAddress")}
+                  defaultValue=""
+                  className="w-full"
+                >
                   {provinces.map((item, index) => {
                     return (
                       <MenuItem
@@ -201,7 +215,11 @@ const CheckoutPage = () => {
                 <span className="absolute left-0 text-xs font-light -top-4 text-textPrimary">
                   Chọn quận/huyện
                 </span>
-                <Select {...register("districtAddress")} className="w-full">
+                <Select
+                  {...register("districtAddress")}
+                  defaultValue=""
+                  className="w-full"
+                >
                   {districts &&
                     districts.map((item, index) => {
                       return (

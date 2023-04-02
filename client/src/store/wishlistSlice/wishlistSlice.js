@@ -18,13 +18,13 @@ export const wishlistSLice = createSlice({
       );
       if (index !== -1) {
         getMessage(
-          "Sản phẩm này đã được thêm vào danh sách yêu thích",
+          "Sản phẩm này đã được thêm vào danh sách yêu thích!",
           "error"
         );
       } else {
         state.wishlists.push(newWishlist);
         getMessage(
-          "Sản phẩm thêm vào danh sách yêu thích thành công😍",
+          "Sản phẩm thêm vào danh sách yêu thích thành công 😍",
           "success"
         );
       }

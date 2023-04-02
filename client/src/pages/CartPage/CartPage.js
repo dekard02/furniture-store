@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { cartItemsTotalSelector } from "../../store/cartSlice/Selector";
 import { useNavigate } from "react-router-dom";
+import getMessage from "../../utils/getMessage";
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
@@ -64,7 +65,15 @@ const CartPage = () => {
                 <span className="text-base italic font-light text-gray-400">
                   Vận chuyển và thuế được tính khi thanh toán
                 </span>
-                <Button onClick={() => navigate(`/checkout`)}>
+                <Button
+                  onClick={() => {
+                    if (cartItems.length > 0) {
+                      navigate(`/checkout`);
+                    } else {
+                      getMessage("Giỏ hàng đang trống!", "error");
+                    }
+                  }}
+                >
                   Thanh Toán
                 </Button>
               </div>

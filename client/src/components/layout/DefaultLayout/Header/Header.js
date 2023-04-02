@@ -9,7 +9,6 @@ import { cartItemsCountSelector } from "../../../../store/cartSlice/Selector";
 import { FiLogIn } from "react-icons/fi";
 import { BiLogInCircle, BiLogOutCircle } from "react-icons/bi";
 import { setLogout } from "../../../../store/auth/userSlice";
-import Swal from "sweetalert2";
 import getMessage from "../../../../utils/getMessage";
 
 const Header = () => {
@@ -18,7 +17,6 @@ const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const cartItemCount = useSelector(cartItemsCountSelector);
   const dispatch = useDispatch();
-
   useEffect(() => {
     const handleScroll = () => {
       let scrollValue = document.documentElement.scrollTop;
@@ -51,7 +49,7 @@ const Header = () => {
           <div className="text-2xl icon-user relative text-textPrimary">
             <i className="transition-all cursor-pointer bi text-textPrimary hover:text-bgPrimary bi-person"></i>
             <div className="absolute w-44 select-none hidden shadow-lg border border-gray-200 -left-[153px] py-3 popup-user flex-col rounded-md bg-white">
-              {!currentUser.email && (
+              {!currentUser?.user && (
                 <NavLink
                   to={"/sign-in"}
                   className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
@@ -63,7 +61,7 @@ const Header = () => {
                   </span>
                 </NavLink>
               )}
-              {currentUser.email && (
+              {currentUser?.user && (
                 <NavLink
                   to={"/sign-in"}
                   className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
@@ -71,34 +69,41 @@ const Header = () => {
                   <i className="bi text-textPrimary text-lg bi-person-check-fill"></i>
 
                   <span className="text-textPrimary capitalize whitespace-nowrap font-medium text-sm">
-                    {currentUser.fullName}
+                    {currentUser?.user?.fullName}
                   </span>
                 </NavLink>
               )}
-              {!currentUser.email && (
+              {!currentUser?.user && (
                 <NavLink
                   to={"/sign-up"}
                   className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
                 >
-                  {/* <FiLogOut className="text-lg font-medium text-textPrimary" /> */}
                   <BiLogInCircle className="text-lg font-medium text-textPrimary" />
                   <span className="text-textPrimary font-medium text-sm">
                     Đăng kí
                   </span>
                 </NavLink>
               )}
-              {currentUser.email && (
+              {currentUser?.user && (
                 <div
                   onClick={handleLogOut}
                   className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
                 >
-                  {/* <FiLogOut className="text-lg font-medium text-textPrimary" /> */}
                   <BiLogOutCircle className="text-lg font-medium text-textPrimary" />
                   <span className="text-textPrimary font-medium text-sm">
                     Đăng xuất
                   </span>
                 </div>
               )}
+              <NavLink
+                to={`/checkout-success`}
+                className="py-2 cursor-pointer hover:bg-gray-200 z-50 flex items-center gap-x-3 px-3"
+              >
+                <i className="bi bi-bank2 text-xs font-medium text-textPrimary"></i>
+                <span className="text-textPrimary font-medium text-sm">
+                  Lịch sử đơn hàng
+                </span>
+              </NavLink>
             </div>
           </div>
           <NavLink
