@@ -4,7 +4,7 @@ export const axioAuth = axios.create({
     baseURL: `http://localhost:8000/api/v1`,
 });
 
-export const loginHeader = (token) => {
+export const AuthorizationHeader = (token) => {
     if (token) {
         axioAuth.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {

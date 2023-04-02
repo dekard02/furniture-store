@@ -1,16 +1,38 @@
 import { toast } from "react-toastify";
-import { axioAuth } from "../../utils/auth";
+import { axioAuth } from "../utils/auth";
 
 export const getProduct = (page) => {
     const data = axioAuth
         .get("products", {
             params: {
                 page: page || 1,
+                isDeleted: false,
             },
         })
         .then((res) => res.data)
         .catch((err) => err);
     return data;
+};
+
+export const getProductDeleted = (page) => {
+    const data = axioAuth
+        .get("products", {
+            params: {
+                page: page || 1,
+                isDeleted: true,
+            },
+        })
+        .then((res) => res.data)
+        .catch((err) => err);
+    return data;
+};
+
+export const UseAddProduct = async (values) => {
+    await toast.promise(axioAuth.post(`products`, values), {
+        pending: "Loading....",
+        success: "Add product success! 👌",
+        error: "Add product fail!  🤯",
+    });
 };
 
 export const UseProductDetail = async (id) => {
@@ -34,6 +56,29 @@ export const UseDeleteProduct = (id) => {
         .delete(`products/${id}`)
         .then((res) => {
             toast(" Delete product success!", {
+                position: "top-right",
+                autoClose: 5000,
+                closeOnClick: true,
+                draggable: true,
+                type: "success",
+            });
+        })
+        .catch((err) => {
+            toast(err.response.data.message.split(":")[2], {
+                position: "top-right",
+                autoClose: 5000,
+                closeOnClick: true,
+                draggable: true,
+                type: "error",
+            });
+        });
+};
+
+export const useRecoverProduct = (id) => {
+    axioAuth
+        .put(`products/${id}`, { isDeleted: false })
+        .then((res) => {
+            toast(" Recover product success!", {
                 position: "top-right",
                 autoClose: 5000,
                 closeOnClick: true,
