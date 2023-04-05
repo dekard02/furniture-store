@@ -10,7 +10,7 @@ import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register } from "../../store/auth/userSlice";
 import getMessage from "../../utils/getMessage";
@@ -33,6 +33,7 @@ const schemaValidate = yup.object({
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
   const {
     control,
     handleSubmit,
@@ -69,6 +70,9 @@ const SignUp = () => {
   }, [errors]);
   useEffect(() => {
     document.title = "Đăng kí";
+  }, []);
+  useEffect(() => {
+    currentUser?.user && navigate("/");
   }, []);
   return (
     <StyledSignUp className="sign-up-page">

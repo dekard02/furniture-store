@@ -14,7 +14,6 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
   const [imgPreview, setImgPreview] = useState("");
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const handleInc = () => {
     setQuantity(quantity + 1);
   };
@@ -112,7 +111,7 @@ const ProductDetailItem = ({ item = {}, isQickView = false }) => {
         ) : (
           <div className="relative">
             <Button
-              onClick={() => navigate("/checkout")}
+              onClick={() => handleAddToCart(item, 1, dispatch)}
               className="btn-add-to-cart"
             >
               Mua Ngay

@@ -28,10 +28,10 @@ export default function Profile() {
         </div>
         <div className="flex flex-col">
           <span className="text-base capitalize font-medium text-secondary">
-            {currentUser.fullName || ""}
+            {currentUser?.user.fullName || ""}
           </span>
           <span className="text-base  font-medium text-secondary">
-            {currentUser.email || ""}
+            {currentUser?.user.email || ""}
           </span>
           <span>Việt Nam</span>
         </div>
