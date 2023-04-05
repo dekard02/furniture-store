@@ -1,13 +1,13 @@
 import axios from "axios";
 
 export const axioAuth = axios.create({
-    baseURL: `http://localhost:8000/api/v1`,
+  baseURL: process.env.REACT_APP_BASEURL,
 });
 
 export const AuthorizationHeader = (token) => {
-    if (token) {
-        axioAuth.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    } else {
-        delete axioAuth.defaults.headers.common["Authorization"];
-    }
+  if (token) {
+    axioAuth.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete axioAuth.defaults.headers.common["Authorization"];
+  }
 };

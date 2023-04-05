@@ -15,6 +15,7 @@ const Header = () => {
   const { scrollValid } = useSelector((state) => state.global);
   const { wishlists } = useSelector((state) => state.wishlist);
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   const cartItemCount = useSelector(cartItemsCountSelector);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -61,9 +62,21 @@ const Header = () => {
                   </span>
                 </NavLink>
               )}
-              {currentUser?.user && (
+              {currentUser?.user?.role === "CUSTOMER" && (
                 <NavLink
                   to={"/profile"}
+                  className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
+                >
+                  <i className="bi text-textPrimary text-lg bi-person-check-fill"></i>
+
+                  <span className="text-textPrimary capitalize whitespace-nowrap font-medium text-sm">
+                    {currentUser?.user?.fullName}
+                  </span>
+                </NavLink>
+              )}
+              {currentUser?.user?.role === "MANAGER" && (
+                <NavLink
+                  to={"/admin/home"}
                   className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
                 >
                   <i className="bi text-textPrimary text-lg bi-person-check-fill"></i>
