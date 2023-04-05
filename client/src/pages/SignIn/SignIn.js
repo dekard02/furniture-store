@@ -11,7 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { login, register } from "../../store/auth/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import getMessage from "../../utils/getMessage";
 
@@ -25,7 +25,7 @@ const schemaValidate = yup.object({
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { currentUser } = useSelector((state) => state.user);
   const {
     control,
     handleSubmit,
@@ -62,6 +62,9 @@ const SignIn = () => {
   }, [errors]);
   useEffect(() => {
     document.title = "Đăng nhập";
+  }, []);
+  useEffect(() => {
+    currentUser?.user && navigate("/");
   }, []);
   return (
     <StyledSignIn className="sign-in-page">

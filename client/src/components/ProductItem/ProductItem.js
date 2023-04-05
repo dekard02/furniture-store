@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { setShowModalQuickView } from "../../store/global/globalSlice";
 import handleAddToWishlist from "../../utils/handleAddToWishlist";
 const ProductItem = ({ item = {} }) => {
-  const { wishlists } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleShowModalQuickView = (product) => {
