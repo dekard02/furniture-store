@@ -1,29 +1,17 @@
 import Skeleton from "react-loading-skeleton";
 import "tippy.js/dist/tippy.css"; // optional
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import HeaderTableProduct from "../../components/HeaderTableProduct";
-import { GetOrder } from "../../hook/useOrder";
-import TrAllOrder from "../../components/TrAllOrder";
+import TrUser from "../../components/TrUser";
 import Paginate from "../../components/Paginate";
+import { GetUser } from "../../hook/useUser";
 
-const tHead = [
-    "Cutstomer",
-    "Phone number",
-    "Recipient",
-    "Status",
-    "Total",
-    "Detail",
-];
-function AllOrder() {
-    const navigate = useNavigate();
+const tHead = ["Name", "Emai", "Role", "Status"];
+function UserInActive() {
     const [searchParams] = useSearchParams();
     const page = searchParams.get("page") ?? 1;
-    const status = searchParams.get("status") ?? "";
-    const data = GetOrder(status, page);
-    const handelChange = async (e) => {
-        navigate(`/admin/all-order?page=${1}&status=${e.target.value}`);
-        navigate(0);
-    };
+    const status = searchParams.get("status") ?? "false";
+    const data = GetUser(status, page);
     return (
         <div className="flex flex-col bg-white">
             <div className=" shadow-md px-5 py-5 mt-7">
@@ -41,23 +29,6 @@ function AllOrder() {
                                     <h3 className="font-semibold text-lg text-white">
                                         Card Tables
                                     </h3>
-                                    <select
-                                        name=""
-                                        id=""
-                                        className="text-black"
-                                        onChange={handelChange}
-                                        value={status}
-                                    >
-                                        <option value="">All</option>
-                                        <option value="SUCCESS">Success</option>
-                                        <option value="PENDING">Pending</option>
-                                        <option value="SHIPPING">
-                                            Shipping
-                                        </option>
-                                        <option value="CANCELED">
-                                            Canceled
-                                        </option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -68,11 +39,11 @@ function AllOrder() {
                             >
                                 <HeaderTableProduct data={tHead} />
                                 <tbody>
-                                    {data?.orders?.map((val, index) => {
+                                    {data?.users.map((val, index) => {
                                         return (
-                                            <TrAllOrder
-                                                key={index}
+                                            <TrUser
                                                 data={val}
+                                                key={index}
                                                 page={page}
                                             />
                                         );
@@ -92,4 +63,4 @@ function AllOrder() {
     );
 }
 
-export default AllOrder;
+export default UserInActive;

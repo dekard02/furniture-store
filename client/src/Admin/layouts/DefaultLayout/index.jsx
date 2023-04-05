@@ -5,28 +5,28 @@ import SideBarContextProvider from "../../context/SideBarContext";
 import AuthContextProvider from "../../context/authContext";
 import ModalContextProvider from "../../context/modalContext";
 import LoadingProvider from "../../context/loadingContext";
-
+import DarkModeContextProvider from "../../context/darkMode";
 function DefaultLayout({ children }) {
+    const profile = JSON.parse(localStorage.getItem("user"));
     return (
         <AuthContextProvider>
-            <LoadingProvider>
-                <ModalContextProvider>
-                    <SideBarContextProvider>
-                        <div
-                            className="h-full w-[100%] flex"
-                            style={{ background: "rgb(245 248 254)" }}
-                        >
+            <DarkModeContextProvider>
+                <LoadingProvider>
+                    <ModalContextProvider>
+                        <SideBarContextProvider>
                             <SideBar />
                             <Main>
-                                <Header></Header>
-                                <div className="mt-7 mb-4 mx-5">{children}</div>
+                                <Header img={profile.image}></Header>
+                                <div className="mt-7  mx-5">{children}</div>
                             </Main>
-                        </div>
-                    </SideBarContextProvider>
-                </ModalContextProvider>
-            </LoadingProvider>
+                        </SideBarContextProvider>
+                    </ModalContextProvider>
+                </LoadingProvider>
+            </DarkModeContextProvider>
         </AuthContextProvider>
     );
 }
 
 export default DefaultLayout;
+
+// rgb(245 248 254)

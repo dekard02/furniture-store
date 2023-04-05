@@ -12,7 +12,6 @@ function TrOder({ data: val, tick, handelTick, page }) {
     const handelUpdateStatus = async (id, status) => {
         setIsLoading(true);
         await UpdateOder(id, status);
-        console.log(123);
         setIsLoading(false);
         navigate(0);
     };

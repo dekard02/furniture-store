@@ -6,15 +6,18 @@ import * as Yup from "yup";
 import { UseDeleteCategory, UseEditCategory } from "../../hook/useCategory";
 import TextArea from "../TextArea";
 import Swal from "sweetalert2";
-import { useRef } from "react";
+import { useContextLoading } from "../../context/loadingContext";
+import { UseDarkModeContext } from "../../context/darkMode";
 export default function ItemCategory({
     name: title,
     description: text,
     stt,
     id,
+    setRender,
 }) {
+    const { darkMode } = UseDarkModeContext();
+    const { setIsLoading } = useContextLoading();
     const [disable, setDisable] = useState(true);
-    const formElement = useRef();
     const category = useFormik({
         initialValues: {
             name: title,
@@ -29,8 +32,12 @@ export default function ItemCategory({
                 .min(30, "Name should more than 30 characters")
                 .required("Description is required"),
         }),
-        onSubmit: (values) => {
-            UseEditCategory(values, id);
+        onSubmit: async (values) => {
+            setIsLoading(true);
+            await UseEditCategory(values, id).finally(() => {
+                setIsLoading(false);
+                setRender((r) => !r);
+            });
         },
         validateOnBlur: false,
         validateOnChange: false,
@@ -44,17 +51,20 @@ export default function ItemCategory({
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!",
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                UseDeleteCategory(id);
-                formElement.current.remove();
+                setIsLoading(true);
+                await UseDeleteCategory(id).finally(() => {
+                    setIsLoading(false);
+                    setRender((r) => !r);
+                });
             }
         });
     };
     return (
-        <form ref={formElement} className=" py-4 my-4 text-gray-500 mt-5 ">
+        <form className=" py-4 my-4 text-gray-500 mt-5 ">
             <h5 className="text-gray-500 text-[17px] mb-3 flex items-center">
-                {stt}.){" "}
+                {`${stt}) `}
                 <span onClick={() => setDisable(false)}>
                     {disable && (
                         <FiEdit className="ml-2 cursor-pointer hover:text-red-500" />
@@ -69,7 +79,9 @@ export default function ItemCategory({
                 id="name"
                 name="name"
                 type="text"
-                className="bg-[#F5F5F1] w-full outline-none p-3 py-4 mb-3 text-gray-500 "
+                className={`${
+                    darkMode ? "dark" : "bg-[#F5F5F1]"
+                } w-full outline-none p-3 py-4 mb-3 text-gray-500`}
                 value={category.values.name}
                 onChange={category.handleChange}
             />

@@ -5,23 +5,22 @@ import {
     AiOutlineHome,
     AiOutlineShoppingCart,
     AiOutlineUser,
-    AiOutlineDashboard,
     AiOutlineSetting,
 } from "react-icons/ai";
 import { RxDot } from "react-icons/rx";
 import { BsChevronDown } from "react-icons/bs";
 import { HiOutlineDatabase } from "react-icons/hi";
-import { BiSupport } from "react-icons/bi";
 import { FaBars } from "react-icons/fa";
 import { UseSideBarContext } from "../../context/SideBarContext";
 import { useLocation } from "react-router-dom";
+import { UseDarkModeContext } from "../../context/darkMode";
 
 const fake = [
     {
         id: 1,
         title: "Home",
         icon: <AiOutlineHome />,
-        path: "/admin",
+        path: "/admin/home",
     },
     {
         id: 100,
@@ -34,6 +33,7 @@ const fake = [
         id: 2,
         title: "Products",
         icon: <HiOutlineDatabase />,
+        path: "/admin/product",
         children: [
             {
                 id: 1,
@@ -56,16 +56,17 @@ const fake = [
         id: 3,
         title: "Orders",
         icon: <AiOutlineShoppingCart />,
+        path: "/admin/order",
         children: [
             {
                 id: 1,
                 title: "All Order",
-                path: "/admin/order-all",
+                path: "/admin/all-order",
             },
             {
                 id: 2,
                 title: "Order Pending",
-                path: "/admin/order-pending",
+                path: "/admin/pending-order",
             },
         ],
     },
@@ -73,22 +74,22 @@ const fake = [
         id: 4,
         title: "Users",
         icon: <AiOutlineUser />,
-        path: "/admin/users",
+        path: "/admin/user",
+        children: [
+            {
+                id: 1,
+                title: "User Active",
+                path: "/admin/active-user",
+            },
+            {
+                id: 2,
+                title: "User Inactive",
+                path: "/admin/inactive-user",
+            },
+        ],
     },
     {
         id: 5,
-        title: "Dashboard",
-        icon: <AiOutlineDashboard />,
-        path: "/admin/dashboard",
-    },
-    {
-        id: 6,
-        title: "Support",
-        icon: <BiSupport />,
-        path: "/admin/support",
-    },
-    {
-        id: 7,
         title: "Setting",
         icon: <AiOutlineSetting />,
         path: "/admin/settings",
@@ -96,9 +97,14 @@ const fake = [
 ];
 
 export default function SideBar() {
+    const { darkMode } = UseDarkModeContext();
     const location = useLocation();
-    const pathAction = location.pathname;
-    const { width, setWidth } = UseSideBarContext();
+    let pathAction =
+        location.pathname.split("/")[location.pathname.split("/").length - 1];
+    if (pathAction.split("-").length >= 2) {
+        pathAction = pathAction.split("-")[1];
+    }
+    const { width, setWidth, setCollapse } = UseSideBarContext();
     const [arr, setArr] = useState([]);
     const handelCheck = (id, children) => {
         if (children) {
@@ -111,7 +117,9 @@ export default function SideBar() {
     };
     return (
         <StyledSideBar
-            className={`fixed bg-white top-3  overflow-x-hidden transition-all h-[100%]  rounded-[12px]`}
+            className={`${
+                darkMode ? "dark_soft" : "bg-white"
+            } fixed top-3  overflow-x-hidden transition-all h-[100%]  rounded-[12px]`}
             style={{
                 width: width,
             }}
@@ -122,19 +130,26 @@ export default function SideBar() {
                         Hello Admin
                     </span>
                     <span
-                        onClick={() => setWidth(0)}
+                        onClick={() => {
+                            setWidth(0);
+                            setCollapse(true);
+                        }}
                         className="text-[20px] text-gray-500 cursor-pointer"
                     >
                         <FaBars />
                     </span>
                 </div>
                 <div
-                    className=" mx-auto overflow-hidden flex justify-center items-center py-2"
-                    style={{ borderBottom: "4px solid #f4f7ff" }}
+                    className=" mx-auto overflow-hidden flex justify-center items-center py-1"
+                    style={{
+                        borderBottom: darkMode
+                            ? "2px solid #353434"
+                            : "4px solid #f4f7ff",
+                    }}
                 >
                     <img
                         src="https://avatars.githubusercontent.com/u/107147020?v=4"
-                        className="w-[70px] h-[70px] rounded-full "
+                        className="w-[70px] h-[70px] rounded-full my-2"
                         alt=""
                     />
                 </div>
@@ -142,7 +157,7 @@ export default function SideBar() {
                     <ul className="whitespace-nowrap">
                         {fake.map((val) => {
                             let Comp = "div";
-                            if (val.path) {
+                            if (val.path && !val.children) {
                                 Comp = Link;
                             }
                             return (
@@ -152,10 +167,26 @@ export default function SideBar() {
                                         handelCheck(val.id, val.children)
                                     }
                                     className={`${
-                                        pathAction === val.path
-                                            ? "bg-[#ebf0fe] text-[#6b88e7]"
-                                            : "bg-white text-[#bbc4dd]"
-                                    } mx-3 my-2 cursor-pointer rounded-[5px] hover:bg-[#ebf0fe] hover:text-[#6b88e7] transition-all `}
+                                        val.path.includes(pathAction)
+                                            ? `${
+                                                  !darkMode
+                                                      ? "bg-[#ebf0fe] text-[#6b88e7]"
+                                                      : "bg-[#353434] shadow-sm"
+                                              }`
+                                            : `${
+                                                  darkMode
+                                                      ? "dark_soft"
+                                                      : "bg-white text-[#bbc4dd]"
+                                              }`
+                                    } mx-3 my-2 cursor-pointer rounded-[5px] ${
+                                        darkMode
+                                            ? "hover:bg-[#353434] "
+                                            : "hover:bg-[#ebf0fe]"
+                                    }  ${
+                                        darkMode
+                                            ? "hover:text-white"
+                                            : "hover:text-[#6b88e7]"
+                                    }  transition-all `}
                                     key={val.id}
                                 >
                                     <Comp

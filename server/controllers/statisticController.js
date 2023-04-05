@@ -4,7 +4,7 @@ const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
 
 exports.getCount = asyncHandler(async (req, res, next) => {
-  const [user, product, successOrder, pendingOrder, canceledOrder] =
+  const [user, product, successOrder, pendingOrder, shippingOrder] =
     await Promise.all([
       User.find({ role: 'CUSTOMER' }).countDocuments(),
       Product.find({
@@ -12,7 +12,7 @@ exports.getCount = asyncHandler(async (req, res, next) => {
       }).countDocuments(),
       Order.find({ status: 'SUCCESS' }).countDocuments(),
       Order.find({ status: 'PENDING' }).countDocuments(),
-      Order.find({ status: 'CANCELED' }).countDocuments(),
+      Order.find({ status: 'SHIPPING' }).countDocuments(),
     ]);
 
   res.status(200).json({
@@ -22,22 +22,21 @@ exports.getCount = asyncHandler(async (req, res, next) => {
       product,
       pendingOrder,
       successOrder,
-      canceledOrder,
+      shippingOrder,
     },
   });
 });
 
 exports.getRevenue = asyncHandler(async (req, res, next) => {
   const currentDate = new Date();
-  const year = req.params.year || currentDate.getFullYear();
-  const month = req.params.year || currentDate.getMonth() + 1;
-
-  const result = await Order.aggregate([
+  const year = +req.query.year || currentDate.getFullYear();
+  const lastDayofMonth = getLastDayOfMonth(year, 12);
+  const data = await Order.aggregate([
     {
       $match: {
         createdAt: {
-          $gte: new Date(year, month - 1, 1),
-          $lt: new Date(year, month, 1),
+          $gte: new Date(year, 0, 1),
+          $lte: new Date(year, 11, lastDayofMonth),
         },
       },
     },
@@ -65,10 +64,78 @@ exports.getRevenue = asyncHandler(async (req, res, next) => {
         },
       },
     },
+    {
+      $addFields: {
+        day: '$_id',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
   ]);
 
   return res.status(200).json({
     status: 'success',
-    dailyRevenue: result,
+    data,
   });
 });
+
+exports.getEachMonth = async (req, res, next) => {
+  const currentDate = new Date();
+  const year = +req.query.year || currentDate.getFullYear();
+  const lastDayofMonth = getLastDayOfMonth(year, 12);
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: new Date(year, 0, 1),
+          $lte: new Date(year, 11, lastDayofMonth),
+        },
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $reduce: {
+            input: '$products',
+            initialValue: 0,
+            in: {
+              $add: [
+                '$$value',
+                { $multiply: ['$$this.price', '$$this.amount'] },
+              ],
+            },
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: '$createdAt' },
+        revenue: {
+          $sum: '$total',
+        },
+      },
+    },
+    {
+      $addFields: {
+        month: '$_id',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+  ]);
+
+  return res.status(200).json({
+    status: 'success',
+    data,
+  });
+};
+function getLastDayOfMonth(year, month) {
+  return new Date(year, month + 1, 0).getDate();
+}

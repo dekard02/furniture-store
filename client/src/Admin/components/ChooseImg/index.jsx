@@ -1,6 +1,7 @@
 import { HiXMark } from "react-icons/hi2";
 import { memo, useState } from "react";
 import { validateImg } from "../../utils/validateImg";
+import { UseDarkModeContext } from "../../context/darkMode";
 function ChooseImg({
     alt,
     img,
@@ -10,6 +11,7 @@ function ChooseImg({
     setDeleteImg,
     deleteImg,
 }) {
+    const { darkMode } = UseDarkModeContext();
     const [key, setKey] = useState(1);
     const handelChange = (e) => {
         const check = validateImg(e);
@@ -54,7 +56,11 @@ function ChooseImg({
     };
     return (
         <div className="mt-4">
-            <div className="grid grid-cols-6 gap-4 bg-[#F5F5F1]">
+            <div
+                className={`${
+                    darkMode ? "dark_soft" : "bg-[#F5F5F1]"
+                } grid grid-cols-6 gap-4 `}
+            >
                 {img?.map((val, index) => {
                     return (
                         <div

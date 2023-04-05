@@ -1,28 +1,20 @@
 import Tippy from "@tippyjs/react";
 import { formatNameProduct as formatName } from "../../utils/formatNameProduct";
-import { formatVnd } from "../../utils/formatVnd";
 const colors = {
-    "Đang giao hàng": "bg-blue-500",
-    "Đang xử lý": "bg-orange-500",
-    "Thành công": "bg-green-500",
-    "Đã hủy": "bg-red-500",
+    CUSTOMER: "green",
+    STAFF: "orange",
+    MANAGER: "red",
 };
-function TrOder({ data: val }) {
+function TrUser({ data: val }) {
     const fullName = formatName(val?.fullName);
-    const status = formatName(val?.status);
-    let total = val?.products.reduce((acc, val) => {
-        return acc + val?.price * val?.amount;
-    }, 0);
-    if (total) total = formatVnd(total?.toString());
     const color = (status) => {
         return colors[status];
     };
-
     return (
         <tr className="bg-gray-800 mt-2">
             <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                 <img
-                    src={val?.user?.image}
+                    src={val?.image}
                     className="h-12 w-12 bg-white rounded-full border"
                     alt="..."
                 />
@@ -32,11 +24,9 @@ function TrOder({ data: val }) {
                     </span>
                 </Tippy>
             </th>
+
             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                {val?.phoneNumber}
-            </td>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <Tippy content={val?.address} interactive>
+                <Tippy content={val?.email} interactive>
                     <p
                         style={{
                             overflow: "hidden",
@@ -45,32 +35,30 @@ function TrOder({ data: val }) {
                             width: "200px",
                         }}
                     >
-                        {val?.address}
+                        {val?.email}
                     </p>
                 </Tippy>
             </td>
             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <button
-                    className={`py-3 px-5 ${color(val?.status)} rounded-[5px]`}
+                    className={`py-3 px-5 rounded-[5px] bg-${color(
+                        val?.role
+                    )}-500`}
                 >
-                    {status}
+                    {val?.role}
                 </button>
             </td>
             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                {total}
-            </td>
-            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <div className="flex">
-                    <a
-                        href={`/admin/detail-order/${val?._id}`}
-                        className="bg-slate-700 rounded-[10px] px-3 py-[2px] cursor-pointer"
-                    >
-                        👁️‍🗨️
-                    </a>
-                </div>
+                <button
+                    className={`py-3 px-5 rounded-[5px] bg-${
+                        val?.active ? "green" : "red"
+                    }-500`}
+                >
+                    {val?.active ? "Active" : "InActive"}
+                </button>
             </td>
         </tr>
     );
 }
 
-export default TrOder;
+export default TrUser;

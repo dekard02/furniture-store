@@ -1,6 +1,9 @@
+import { UseDarkModeContext } from "../../context/darkMode";
+
 export default function HeaderTableProduct({ data, handeTickAll, isAll }) {
+    const { darkMode } = UseDarkModeContext();
     return (
-        <thead className="bg-gray-800">
+        <thead className={`${darkMode ? "dark" : "bg-gray-800"}`}>
             <tr>
                 {data.map((val) => (
                     <th

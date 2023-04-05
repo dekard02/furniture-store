@@ -1,6 +1,8 @@
 import { useRef } from "react";
+import { UseDarkModeContext } from "../../context/darkMode";
 
 export default function TextArea({ values, fomikHandelChange, id, disable }) {
+    const { darkMode } = UseDarkModeContext();
     const element = useRef();
     const handleChange = (e) => {
         fomikHandelChange(e);
@@ -12,7 +14,9 @@ export default function TextArea({ values, fomikHandelChange, id, disable }) {
             id={id}
             name={id}
             ref={element}
-            className="bg-[#F5F5F1] w-full outline-none p-3 py-4 text-black "
+            className={`${
+                darkMode ? "dark_soft" : "bg-[#F5F5F1]"
+            } w-full outline-none p-3 py-4 text-black `}
             defaultValue={values}
             onChange={handleChange}
         ></textarea>

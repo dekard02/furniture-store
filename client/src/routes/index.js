@@ -19,6 +19,8 @@ import WishList from "../pages/WishList/WishList";
 import OrderPending from "../Admin/pages/Order/OrderPending";
 import OrderDetail from "../Admin/components/OrderDetail";
 import AllOrder from "../Admin/pages/Order/AllOrder";
+import UserActive from "../Admin/pages/User/UserActive";
+import UserInactive from "../Admin/pages/User/UserInactive";
 
 export const publicRoutes = [
     {
@@ -73,7 +75,7 @@ export const publicRoutes = [
 
 export const privateRouter = [
     {
-        path: "/admin",
+        path: "/admin/home",
         component: (
             <DefaultLayout>
                 <HomeAdmin></HomeAdmin>
@@ -114,7 +116,7 @@ export const privateRouter = [
     },
 
     {
-        path: "admin/order-all",
+        path: "admin/all-order",
         component: (
             <DefaultLayout>
                 <AllOrder></AllOrder>
@@ -122,7 +124,7 @@ export const privateRouter = [
         ),
     },
     {
-        path: "admin/order-pending",
+        path: "admin/pending-order",
         component: (
             <DefaultLayout>
                 <OrderPending></OrderPending>
@@ -130,10 +132,26 @@ export const privateRouter = [
         ),
     },
     {
-        path: "admin/order-detail/:id",
+        path: "admin/detail-order/:id",
         component: (
             <DefaultLayout>
                 <OrderDetail></OrderDetail>
+            </DefaultLayout>
+        ),
+    },
+    {
+        path: "admin/active-user",
+        component: (
+            <DefaultLayout>
+                <UserActive></UserActive>
+            </DefaultLayout>
+        ),
+    },
+    {
+        path: "admin/inactive-user",
+        component: (
+            <DefaultLayout>
+                <UserInactive></UserInactive>
             </DefaultLayout>
         ),
     },
