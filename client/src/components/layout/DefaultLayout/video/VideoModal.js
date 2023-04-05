@@ -28,11 +28,7 @@ const VideoModal = () => {
             height={"500px"}
             loop={true}
             controls={true}
-            url={
-              playVideo
-                ? "https://www.youtube.com/watch?v=hiRqIZcVkv4&list=RDhiRqIZcVkv4&start_radio=1"
-                : ""
-            }
+            url={playVideo ? "https://www.youtube.com/watch?v=jsa4t-jLy0s" : ""}
           />
         </div>
       </div>

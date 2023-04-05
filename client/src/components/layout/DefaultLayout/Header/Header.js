@@ -63,7 +63,7 @@ const Header = () => {
               )}
               {currentUser?.user && (
                 <NavLink
-                  to={"/sign-in"}
+                  to={"/profile"}
                   className="py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-x-3 px-3"
                 >
                   <i className="bi text-textPrimary text-lg bi-person-check-fill"></i>

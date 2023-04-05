@@ -9,7 +9,6 @@ import CheckoutPage from "../pages/Checkout/CheckoutPage";
 import CheckoutSuccess from "../pages/Checkout/CheckoutSuccess";
 import Home from "../pages/Home/Home";
 import { default as HomeAdmin } from "../Admin/pages/Home";
-import Order from "../pages/Order/Order";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import Products from "../pages/Products/Products";
 import Profile from "../pages/Profile/Profile";
@@ -65,7 +64,6 @@ export const publicRoutes = [
     path: "/sign-in",
     component: SignIn,
   },
-
   {
     path: "/profile",
     component: Profile,
@@ -93,69 +91,69 @@ export const privateRouter = [
       </DefaultLayout>
     ),
   },
-    {
-        path: "/admin",
-        component: (
-            <DefaultLayout>
-                <HomeAdmin></HomeAdmin>
-            </DefaultLayout>
-        ),
-    },
-    {
-        path: "/admin/category",
-        component: (
-            <DefaultLayout>
-                <AllCategory></AllCategory>
-            </DefaultLayout>
-        ),
-    },
-    {
-        path: "admin/product",
-        component: (
-            <DefaultLayout>
-                <AllProduct></AllProduct>
-            </DefaultLayout>
-        ),
-    },
-    {
-        path: "admin/add-product",
-        component: (
-            <DefaultLayout>
-                <AddProduct></AddProduct>
-            </DefaultLayout>
-        ),
-    },
-    {
-        path: "admin/recently-product",
-        component: (
-            <DefaultLayout>
-                <RecentlyProduct></RecentlyProduct>
-            </DefaultLayout>
-        ),
-    },
+  {
+    path: "/admin",
+    component: (
+      <DefaultLayout>
+        <HomeAdmin></HomeAdmin>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/category",
+    component: (
+      <DefaultLayout>
+        <AllCategory></AllCategory>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "admin/product",
+    component: (
+      <DefaultLayout>
+        <AllProduct></AllProduct>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "admin/add-product",
+    component: (
+      <DefaultLayout>
+        <AddProduct></AddProduct>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "admin/recently-product",
+    component: (
+      <DefaultLayout>
+        <RecentlyProduct></RecentlyProduct>
+      </DefaultLayout>
+    ),
+  },
 
-    {
-        path: "admin/order-all",
-        component: (
-            <DefaultLayout>
-                <AllOrder></AllOrder>
-            </DefaultLayout>
-        ),
-    },
-    {
-        path: "admin/order-pending",
-        component: (
-            <DefaultLayout>
-                <OrderPending></OrderPending>
-            </DefaultLayout>
-        ),
-    },
-    {
-        path: "admin/order-detail/:id",
-        component: (
-            <DefaultLayout>
-                <OrderDetail></OrderDetail>
-            </DefaultLayout>
-        ),
-    },
+  {
+    path: "admin/order-all",
+    component: (
+      <DefaultLayout>
+        <AllOrder></AllOrder>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "admin/order-pending",
+    component: (
+      <DefaultLayout>
+        <OrderPending></OrderPending>
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "admin/order-detail/:id",
+    component: (
+      <DefaultLayout>
+        <OrderDetail></OrderDetail>
+      </DefaultLayout>
+    ),
+  },
 ];

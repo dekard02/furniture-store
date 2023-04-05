@@ -7,12 +7,14 @@ import getCreatedAt from "../../utils/getCreatedAt";
 import orderApi from "../../service/orderApi";
 import styled from "styled-components";
 import Button from "../../components/Button/Button";
+import LoadingCircle from "../../components/Loading/LoadingCircle";
 const CheckoutSuccess = () => {
   const [orders, setOrders] = useState(null);
   const [order, setOrder] = useState(null);
   const [value, setValue] = useState("");
   const [submit, setSearchSubmit] = useState(false);
   const [orderId, setOrderId] = useState("");
+  const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { id } = useParams();
   const handleSearchOrder = useCallback(
@@ -26,6 +28,7 @@ const CheckoutSuccess = () => {
   );
 
   useEffect(() => {
+    setLoading(true);
     const fetchProducts = async () => {
       try {
         if (orderId) {
@@ -33,6 +36,7 @@ const CheckoutSuccess = () => {
 
           if (res) {
             setOrder(res.order);
+            setLoading(false);
             setOrders([]);
           }
         } else {
@@ -40,16 +44,19 @@ const CheckoutSuccess = () => {
             const res = await orderApi.getOrders();
             if (res && res.orders) {
               setOrders(res.orders);
+              setLoading(false);
             }
           } else {
             const res = await orderApi.getOrder(id);
             if (res) {
               setOrder(res.order);
+              setLoading(false);
             }
           }
         }
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -95,6 +102,7 @@ const CheckoutSuccess = () => {
                 Lịch sử đơn hàng
               </h3>
               <div className="order-list gap-y-3 flex flex-col">
+                {loading && <LoadingCircle />}
                 {!order && !orders?.length && (
                   <div>Không tìm thấy lịch sử đặt hàng</div>
                 )}
