@@ -1,8 +1,10 @@
 import { HiXMark } from "react-icons/hi2";
-import { useCategory as getCategory } from "../../hook/useCategory";
+import { GetCategorySimple as getCategory } from "../../hook/useCategory";
 import { useState } from "react";
+import { UseDarkModeContext } from "../../context/darkMode";
 
 export default function Select({ select = [], label = "Category", setSelect }) {
+    const { darkMode } = UseDarkModeContext();
     const [key, setKey] = useState(1);
     const categorys = getCategory();
     const handelChange = async (value) => {
@@ -27,13 +29,19 @@ export default function Select({ select = [], label = "Category", setSelect }) {
             >
                 {label}
             </label>
-            <div className="bg-[#F5F5F1]  flex flex-wrap cursor-pointer mb-3">
+            <div
+                className={`${
+                    darkMode ? "dark_soft" : "bg-[#F5F5F1] "
+                } flex flex-wrap cursor-pointer mb-3 py-2`}
+            >
                 {select?.map((val, index) => {
                     return (
                         <p
                             onClick={() => handelRemove(val._id)}
                             key={index}
-                            className="text-[12px] bg-white my-1 mx-1 px-3 py-1 rounded-[30px] text-black flex items-center"
+                            className={`${
+                                darkMode ? "dark" : "bg-white"
+                            } text-[12px]  my-1 mx-1 px-3 py-1 rounded-[30px] text-black flex items-center`}
                         >
                             {val.name}
                             <HiXMark className="ml-[5px] " />
@@ -48,7 +56,9 @@ export default function Select({ select = [], label = "Category", setSelect }) {
                     setKey((key) => key + 1);
                 }}
                 id="countries"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-none"
+                className={` ${darkMode ? "dark_soft" : "bg-gray-50 "}
+                border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none
+                `}
             >
                 <option value={-1}>---Choose Category---</option>
                 {categorys?.categories?.map((val) => {

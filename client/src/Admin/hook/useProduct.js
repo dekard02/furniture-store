@@ -74,8 +74,8 @@ export const UseDeleteProduct = (id) => {
         });
 };
 
-export const useRecoverProduct = (id) => {
-    axioAuth
+export const useRecoverProduct = async (id) => {
+    await axioAuth
         .put(`products/${id}`, { isDeleted: false })
         .then((res) => {
             toast(" Recover product success!", {

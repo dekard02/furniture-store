@@ -1,6 +1,8 @@
 import { memo, useEffect, useRef } from "react";
 import { HiXMark } from "react-icons/hi2";
+import { UseDarkModeContext } from "../../context/darkMode";
 function Modal({ children, isOpen, setIsOpen }) {
+    const { darkMode } = UseDarkModeContext();
     const overlay = useRef();
     const handelClose = (e) => {
         const target = e.target;
@@ -22,10 +24,16 @@ function Modal({ children, isOpen, setIsOpen }) {
                 backgroundColor: "rgba(0, 0, 0, 0.8)",
             }}
         >
-            <div className="relative py-5 px-4 bg-white shadow-lg left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[50%]">
+            <div
+                className={`${
+                    darkMode ? "dark" : "bg-white"
+                } relative py-5 px-4  shadow-lg left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[50%]`}
+            >
                 <span
                     onClick={() => setIsOpen(false)}
-                    className="absolute right-3 top-5 text-[20px] cursor-pointer text-black"
+                    className={`${
+                        darkMode ? "text-white" : "text-black"
+                    } absolute right-3 top-5 text-[20px] cursor-pointer `}
                 >
                     <HiXMark />
                 </span>

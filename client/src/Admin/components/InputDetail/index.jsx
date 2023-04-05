@@ -1,3 +1,5 @@
+import { UseDarkModeContext } from "../../context/darkMode";
+
 export default function InputDetail({
     title,
     value,
@@ -6,6 +8,7 @@ export default function InputDetail({
     setData,
     id,
 }) {
+    const { darkMode } = UseDarkModeContext();
     const valuedynamic = {
         [change ? "value" : "defaultValue"]: value,
     };
@@ -16,7 +19,9 @@ export default function InputDetail({
             <input
                 id={id}
                 name={id}
-                className="bg-[#F5F5F1] w-full py-2 px-1 text-[14px] rounded-[5px]"
+                className={`${
+                    darkMode ? "dark_soft" : "bg-[#F5F5F1]"
+                }  w-full py-2 px-1 text-[14px] rounded-[5px]`}
                 disabled={disabled}
                 type="text"
                 style={{ border: "1px solid #D9D9D9" }}

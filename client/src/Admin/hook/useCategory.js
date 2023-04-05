@@ -2,7 +2,18 @@ import { useEffect, useState } from "react";
 import { axioAuth } from "../utils/auth";
 import { toast } from "react-toastify";
 
-export const useCategory = (page) => {
+export const GetCategory = async (page) => {
+    const data = axioAuth
+        .get("categories", {
+            params: {
+                page: page || 1,
+            },
+        })
+        .then((res) => res.data)
+        .catch((err) => err);
+    return data;
+};
+export const GetCategorySimple = (page) => {
     const [data, setData] = useState(null);
     useEffect(() => {
         axioAuth
@@ -13,12 +24,12 @@ export const useCategory = (page) => {
             })
             .then((res) => setData(res.data))
             .catch((err) => err);
-    }, [page]);
+    }, []);
     return data;
 };
 
-export const UseAddCategory = (values) => {
-    axioAuth
+export const UseAddCategory = async (values) => {
+    await axioAuth
         .post("categories", values)
         .then((res) => {
             toast(" Add category success!", {
@@ -40,29 +51,6 @@ export const UseAddCategory = (values) => {
         });
 };
 
-// export const UseEditCategory = (values, id) => {
-//     axioAuth
-//         .put(`categories/${id}`, values)
-//         .then((res) => {
-//             toast(" Edit category success!", {
-//                 position: "top-right",
-//                 autoClose: 5000,
-//                 closeOnClick: true,
-//                 draggable: true,
-//                 type: "success",
-//             });
-//         })
-//         .catch((err) => {
-//             toast(err.response.data.message.split(":")[2], {
-//                 position: "top-right",
-//                 autoClose: 5000,
-//                 closeOnClick: true,
-//                 draggable: true,
-//                 type: "error",
-//             });
-//         });
-// };
-
 export const UseEditCategory = async (values, id) => {
     await toast.promise(axioAuth.put(`categories/${id}`, values), {
         pending: "Loading....",
@@ -71,8 +59,8 @@ export const UseEditCategory = async (values, id) => {
     });
 };
 
-export const UseDeleteCategory = (id) => {
-    axioAuth
+export const UseDeleteCategory = async (id) => {
+    await axioAuth
         .delete(`categories/${id}`)
         .then((res) => {
             toast(" Delete category success!", {

@@ -1,6 +1,8 @@
 import React from "react";
+import { UseDarkModeContext } from "../../context/darkMode";
 
 export default function Input(props) {
+    const { darkMode } = UseDarkModeContext();
     const {
         setData,
         label,
@@ -20,7 +22,9 @@ export default function Input(props) {
             </label>
             <div className="flex flex-col flex-1 items-start">
                 <input
-                    className="flex-1 py-[6px] px-3 outline-none text-[14px] text-gray-600 border border-gray-300 w-[100%]"
+                    className={`${
+                        darkMode ? "dark" : "bg-white"
+                    } flex-1 py-[6px] px-3 outline-none text-[14px] text-gray-600 border border-gray-300 w-[100%]`}
                     id={id}
                     name={id}
                     type={type}

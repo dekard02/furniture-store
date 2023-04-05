@@ -17,5 +17,11 @@ router.get(
   auth.authorize('MANAGER'),
   statisticController.getRevenue
 );
+router.get(
+  '/revenue-month',
+  auth.protect,
+  auth.authorize('MANAGER'),
+  statisticController.getEachMonth
+);
 
 module.exports = router;

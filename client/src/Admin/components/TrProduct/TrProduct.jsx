@@ -5,7 +5,9 @@ import { formatVnd } from "../../utils/formatVnd";
 import { formatNameProduct } from "../../utils/formatNameProduct";
 import { UseDeleteProduct } from "../../hook/useProduct";
 import Swal from "sweetalert2";
+import { UseDarkModeContext } from "../../context/darkMode";
 function TrProduct({ val, onClick, onClickEdit }) {
+    const { darkMode } = UseDarkModeContext();
     const refProduct = useRef();
     const name = formatNameProduct(val.name);
     const coin = formatVnd(val?.price.toString());
@@ -26,7 +28,10 @@ function TrProduct({ val, onClick, onClickEdit }) {
         });
     };
     return (
-        <tr ref={refProduct} className="bg-gray-800 mt-2">
+        <tr
+            ref={refProduct}
+            className={`${darkMode ? "dark" : "bg-gray-800"} mt-2`}
+        >
             <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                 <img
                     src={val.images[0]}

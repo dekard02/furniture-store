@@ -1,13 +1,19 @@
+import { UseDarkModeContext } from "../../context/darkMode";
 import InputDetail from "../InputDetail";
 import Modal from "../Modal";
 import { memo } from "react";
 function ProductDetail({ data, isOpen, setIsOpen }) {
+    const { darkMode } = UseDarkModeContext();
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <h4 className="text-gray-600 text-[20px] flex items-center">
                 Detail
             </h4>
-            <p className="bg-[#F5F5F1] w-full py-2 px-1 text-[14px] rounded-[5px] block mt-4 text-[#5F5F5F]">
+            <p
+                className={`${
+                    darkMode ? "dark_soft" : "bg-[#F5F5F1]"
+                } w-full py-2 px-1 text-[14px] rounded-[5px] block mt-4 text-[#5F5F5F]`}
+            >
                 Category:{" "}
                 {data?.categories.map((val, index) => (
                     <span key={index}>{`${
@@ -23,10 +29,18 @@ function ProductDetail({ data, isOpen, setIsOpen }) {
                 <InputDetail title="Created At" value={data?.createdAt} />
                 <InputDetail title="Updated At" value={data?.updatedAt} />
             </div>
-            <p className="bg-[#F5F5F1] w-full py-2 px-1 text-[14px] rounded-[5px] block mt-4 text-[#5F5F5F]">
+            <p
+                className={`${
+                    darkMode ? "dark_soft" : "bg-[#F5F5F1]"
+                } w-full py-2 px-1 text-[14px] rounded-[5px] block mt-4 text-[#5F5F5F]`}
+            >
                 {data?.description}
             </p>
-            <div className="grid grid-cols-6 gap-4 mt-3 pt-2 pb-5 bg-[#F5F5F1]">
+            <div
+                className={`${
+                    darkMode ? "dark_soft" : "bg-[#F5F5F1]"
+                } grid grid-cols-6 gap-4 mt-3 pt-2 pb-5 `}
+            >
                 {data?.images.map((val, index) => {
                     return (
                         <div

@@ -1,3 +1,4 @@
+import Skeleton from "react-loading-skeleton";
 import "tippy.js/dist/tippy.css"; // optional
 import { useSearchParams } from "react-router-dom";
 import HeaderTableProduct from "../../components/HeaderTableProduct";
@@ -84,7 +85,11 @@ function OrderFulfill() {
                                 </tbody>
                             </table>
                         </div>
-                        <Paginate paginate={data?.page} />
+                        {data ? (
+                            <Paginate paginate={data?.page} />
+                        ) : (
+                            <Skeleton baseColor="#1f2937" count={50} />
+                        )}
                     </div>
                 </div>
             </section>

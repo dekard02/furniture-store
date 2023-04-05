@@ -8,7 +8,9 @@ import ChooseImg from "../../components/ChooseImg";
 import { useState } from "react";
 import { UseAddProduct } from "../../hook/useProduct";
 import { formData } from "../../utils/formData";
+import { UseDarkModeContext } from "../../context/darkMode";
 export default function AddProduct() {
+    const { darkMode } = UseDarkModeContext();
     const navigage = useNavigate();
     const [select, setSelect] = useState();
     const [img, setImg] = useState([]);
@@ -60,7 +62,11 @@ export default function AddProduct() {
         validateOnChange: false,
     });
     return (
-        <div className=" bg-white shadow-md px-5 py-5">
+        <div
+            className={` ${
+                darkMode ? "dark_soft" : "bg-white"
+            } shadow-md px-5 py-5`}
+        >
             <h4 className="mb-5 font-semibold text-[20px]">Add Category</h4>
             <form
                 className="text-center"
