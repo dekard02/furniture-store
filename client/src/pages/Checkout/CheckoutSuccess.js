@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useState } from "react";
-import BreadCrumb from "../../components/BreadCrumb/BreadCrumb";
-import thankyou from "../../assets/thankyou.gif";
-import { NavLink, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import getCreatedAt from "../../utils/getCreatedAt";
-import orderApi from "../../service/orderApi";
-import styled from "styled-components";
-import Button from "../../components/Button/Button";
-import LoadingCircle from "../../components/Loading/LoadingCircle";
+import React, { useCallback, useEffect, useState } from 'react';
+import BreadCrumb from '../../components/BreadCrumb/BreadCrumb';
+import thankyou from '../../assets/thankyou.gif';
+import { NavLink, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import getCreatedAt from '../../utils/getCreatedAt';
+import orderApi from '../../service/orderApi';
+import styled from 'styled-components';
+import Button from '../../components/Button/Button';
+import LoadingCircle from '../../components/Loading/LoadingCircle';
 const CheckoutSuccess = () => {
   const [orders, setOrders] = useState(null);
   const [order, setOrder] = useState(null);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const [submit, setSearchSubmit] = useState(false);
-  const [orderId, setOrderId] = useState("");
+  const [orderId, setOrderId] = useState('');
   const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { id } = useParams();
@@ -70,18 +70,20 @@ const CheckoutSuccess = () => {
   return (
     <StyledCheckoutSuccess className="checkout-success">
       <BreadCrumb heading="Checkout Success" title="Home - Checkout Success" />
-      <div style={{ paddingTop: "40px" }} className="wrapper-layout section">
-        <div className="relative mb-4">
-          <h3 style={{ margin: 0 }} className="section-title">
-            Đặt hàng thành công
-          </h3>
+      <div style={{ paddingTop: '40px' }} className="wrapper-layout section">
+        {(order || orders) && (
+          <div className="relative mb-4">
+            <h3 style={{ margin: 0 }} className="section-title">
+              Đặt hàng thành công
+            </h3>
 
-          <div className="flex flex-col gap-y-4">
-            <div className="flex justify-center">
-              <img className="w-80" src={thankyou} alt="" />
+            <div className="flex flex-col gap-y-4">
+              <div className="flex justify-center">
+                <img className="w-80" src={thankyou} alt="" />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="flex px-3 py-3 bg-white my-order rounded-md flex-col gap-y-2">
           <div className="search-order gap-x-3 flex">
@@ -181,7 +183,7 @@ const CheckoutSuccess = () => {
                       </div>
                       <div className="flex items-center gap-x-3">
                         <span>Ngày tạo:</span>
-                        <span>{getCreatedAt(order.createdAt) || ""}</span>
+                        <span>{getCreatedAt(order.createdAt) || ''}</span>
                       </div>
                     </div>
                     <div className="border gap-y-4 p-3 w-full border-gray-200">
@@ -238,7 +240,7 @@ const CheckoutSuccess = () => {
                       </div>
                       <div className="flex items-center gap-x-3">
                         <span>Ngày tạo:</span>
-                        <span>{getCreatedAt(order.createdAt) || ""}</span>
+                        <span>{getCreatedAt(order.createdAt) || ''}</span>
                       </div>
                     </div>
                     <div className="border gap-y-4 p-3 w-full border-gray-200">

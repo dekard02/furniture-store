@@ -98,6 +98,11 @@ function Home() {
             setDataDetail(drilldownMonthDetail);
         }
     }, [data, dataDt]);
+
+    useEffect(()=>{
+        document.title = "Admin";
+    },[]);
+
     return (
         <div className="pt-10 ">
             <div className="grid grid-cols-3 gap-10 mb-10">
