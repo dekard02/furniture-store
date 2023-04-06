@@ -2,6 +2,7 @@ const AppError = require('../errors/AppError');
 const asyncHandler = require('../errors/asyncHandler');
 const Order = require('../models/orderModel');
 const APIFeatures = require('../utils/APIFeature');
+const getOrderStatus = require('../utils/getOrderStatus');
 const { omitFields } = require('../utils/objectUtils');
 
 exports.getAllOrders = asyncHandler(async (req, res, next) => {
@@ -48,7 +49,7 @@ exports.updateOrder = asyncHandler(async (req, res, next) => {
 
   if (!order) throw new AppError('Không tìm thấy đơn hàng với id này', 404);
 
-  if (order.status !== 'PENDING')
+  if (order.status !== getOrderStatus('PENDING'))
     throw new AppError(
       'Không thể sửa thông tin do đơn hàng đã được duyệt!!',
       400
